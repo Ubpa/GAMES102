@@ -46,3 +46,10 @@
 - ECS：以便理解框架的逻辑执行方式，以及代码编写方式。参考资料：[UECS 文档](https://github.com/Ubpa/UECS)，[Unity ECS 文档](https://docs.unity3d.com/Packages/com.unity.entities@0.14/index.html) 
 - ImGui：简单易用的 UI 库。参考资料：[imgui](https://github.com/ocornut/imgui)。（一般直接从官方提供的 [example](https://github.com/ocornut/imgui#demo) 和 [demo](https://github.com/ocornut/imgui/blob/master/imgui_demo.cpp) 源码中学习使用方式。
 
+## 问题
+
+- 如果启动后，弹出窗口过段时间后程序出错，可尝试
+  - 把 [Irradiance.hlsl](assets/shaders/Irradiance.hlsl) 第 99 行的 `1024u` 改小试试，如 `256u` 
+  - 把 [PreFilter.hlsl](assets/shaders/PreFilter.hlsl) 第 108 行的 `256u` 改小试试，如 `64u` 
+- 框架还处于快速开发中，鲁棒性有限，不良操作可能直接导致程序崩溃，有疑惑可联系助教
+
