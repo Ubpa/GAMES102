@@ -19,6 +19,19 @@
 
 > 所需数据存放在 [CanvasData.h](src/hw1/Components/CanvasData.h) 中，你可以调整它
 >
+> > 我们使用了 [USRefl](https://github.com/Ubpa/USRefl) 来实现静态反射功能，提供了一个自动生成描述文件 [CanvasData_AutoRefl.inl](src/hw1/Components/details/CanvasData_AutoRefl.inl) 的工具。
+> >
+> > 当你修改 CanvasData.h 后，你需要将 CanvasData_AutoRefl.inl 删除，以便使 CMake 自动生成新的描述文件。
+> >
+> > 该工具存在一定的问题，如
+> >
+> > - 不能有类型声明，如 `class MyClass;` 
+> > - 不能嵌套类定义
+> > - 不支持部分 C++17 语法
+> > - 不支持模板的连续 `>>` 符号，如 `std::vector<std::vector<int>>` 
+> >
+> > 你可以通过手写描述的方式避免这些问题。
+>
 > 如果你需要添加文件，你可以在 src 的合理位置放置代码文件，然后重新在 CMake-Gui 里 configure + generate，vs2019 会刷新项目从而包含新文件
 
 目前该系统中有画线段功能（在canvas左键拖拽即可），你需要修改这部分逻辑，如通过鼠标点击获取点集，对这些点集的 x 坐标进行排序，计算相应的曲线，对曲线采样并利用 `ImDrawList::AddLine` 来绘制 polyline（更多的绘制方法看 `ImDrawList` 定义）。
