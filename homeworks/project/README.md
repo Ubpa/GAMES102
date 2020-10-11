@@ -25,6 +25,8 @@
 
 作业题涉及多种曲线生成方法，因此你还应该用 `ImGui::RadioButton` 或者其他交互方式修改曲线类型。
 
+对于不想使用鼠标交互方式作为输入的同学，我们将提供 plot 方式的 UI 减轻大家的负担（TODO）
+
 你需要了解
 
 - Utopia：引擎框架。参考资料：[Utopia](https://github.com/Ubpa/Utopia)（内含文档，但并不丰富）
