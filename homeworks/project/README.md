@@ -4,7 +4,7 @@
 
 - Windows 10
 - VS 2019（[下载链接](https://visualstudio.microsoft.com/zh-hans/vs/)）
-- CMake 3.18.4（[下载链接](https://cmake.org/download/)，[简单使用方法的视频教程](https://www.bilibili.com/video/BV1Z7411z78n)）
+- CMake 3.18.4（[下载链接](https://cmake.org/download/)，[简单使用方法的视频教程](https://www.bilibili.com/video/BV1Z7411z78n)，更详细的使用教程（TODO））
 - JDK（[下载链接](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html)）
 - 可选：assimp（[源码链接](https://github.com/assimp/assimp)）
 
