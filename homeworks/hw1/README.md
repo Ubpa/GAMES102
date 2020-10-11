@@ -5,7 +5,9 @@
 ## 问题
 
 **Input**：已知平面内 n 个点 $P_j(x_j,y_j), j=1,2,\dots,n$。
+
 **Output**: 拟合这些点的函数。
+
 要求：实现不同的拟合方法，并进行比较。输入点集可以进行交互式鼠标指定，或者其他方法生成。
 
 ![https://i.bmp.ovh/imgs/2020/10/c10f7ef259809aa0.png](https://i.bmp.ovh/imgs/2020/10/c10f7ef259809aa0.png)
