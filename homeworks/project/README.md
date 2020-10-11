@@ -4,7 +4,7 @@
 
 - Windows 10
 - VS 2019（[下载链接](https://visualstudio.microsoft.com/zh-hans/vs/)）
-- CMake 3.18.4（[下载链接](https://cmake.org/download/)）
+- CMake 3.18.4（[下载链接](https://cmake.org/download/)，[简单使用方法的视频教程](https://www.bilibili.com/video/BV1Z7411z78n)）
 - JDK（[下载链接](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html)）
 - 可选：assimp（[源码链接](https://github.com/assimp/assimp)）
 
@@ -17,15 +17,15 @@
 
 根据作业要求，通过修改 [CanvasSystem.cpp](src/hw1/Systems/CanvasSystem.cpp) 完成作业
 
-> 所需数据存放在 [CanvasData.h](src/hw1/Systems/CanvasData.h) 中，你可以调整它
+> 所需数据存放在 [CanvasData.h](src/hw1/Components/CanvasData.h) 中，你可以调整它
 >
 > 如果你需要添加文件，你可以在 src 的合理位置放置代码文件，然后重新在 CMake-Gui 里 configure + generate，vs2019 会刷新项目从而包含新文件
 
-目前该系统中有画线段功能（在canvas左键拖拽即可），你需要修改这部分逻辑，如通过鼠标点击获取点集，对这些点集的 x 坐标进行排序，计算相应的曲线，对曲线采样并利用 `ImDrawList::AddLine` 来绘制曲线（更多的绘制方法看 `ImDrawList` 定义）。
+目前该系统中有画线段功能（在canvas左键拖拽即可），你需要修改这部分逻辑，如通过鼠标点击获取点集，对这些点集的 x 坐标进行排序，计算相应的曲线，对曲线采样并利用 `ImDrawList::AddLine` 来绘制 polyline（更多的绘制方法看 `ImDrawList` 定义）。
 
 作业题涉及多种曲线生成方法，因此你还应该用 `ImGui::RadioButton` 或者其他交互方式修改曲线类型。
 
-对于不想使用鼠标交互方式作为输入的同学，我们将提供 plot 方式的 UI 减轻大家的负担（TODO）
+对于不想使用鼠标交互方式作为输入的同学，我们将提供 **plot** 方式的 UI 减轻大家的负担（TODO）
 
 你需要了解
 
