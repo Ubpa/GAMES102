@@ -21,7 +21,7 @@
 - Git：[官网](https://git-scm.com/)，[下载链接](https://git-scm.com/download/win) 
 - GitHub Desktop：[官网](https://desktop.github.com/)，[下载链接](https://central.github.com/deployments/desktop/desktop/latest/win32)，[官方文档](https://help.github.com/en/desktop) 
 - Vistual Studio Community 2019: [官网](https://visualstudio.microsoft.com/zh-hans/vs/) 
-- CMake 3.18.2：[官网](https://cmake.org/)，[下载链接](https://github.com/Kitware/CMake/releases/download/v3.16.3/cmake-3.16.3-win64-x64.msi)，[视频教程](https://www.bilibili.com/video/av85644125/)，[官方教程](https://cmake.org/cmake/help/latest/guide/tutorial/index.html)，[官方文档](https://cmake.org/documentation/) 
+- CMake 3.18.2：[官网](https://cmake.org/)，[下载链接](https://github.com/Kitware/CMake/releases/download/v3.16.3/cmake-3.16.3-win64-x64.msi)，[视频教程](https://www.bilibili.com/video/av85644125/)，[官方教程](https://cmake.org/cmake/help/latest/guide/tutorial/index.html)，[官方文档](https://cmake.org/documentation/)，[简易使用教程](softwars/CMake.md) 
 - Typora：[官网](https://www.typora.io/)，[下载链接](https://www.typora.io/windows/typora-setup-x64.exe?)，[官方文档](http://support.typora.io/) 
 
 ### 辅助资料
