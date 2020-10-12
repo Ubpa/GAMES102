@@ -59,6 +59,8 @@
 
 此方法使用方便，缺点是不含源码
 
+> 所需下载的资源在课程群文件内的“框架依赖资源”里可以找到
+
 - 使用 Github Desktop 克隆此库 [GAMES 102](https://github.com/Ubpa/GAMES102)，注意路径应放到**较浅**的位置，如盘符根目录
 - 直接下载编译好的依赖库 Ubpa_v0.zip（[百度盘链接（提取码：x0i9）](https://pan.baidu.com/s/1KKloWnlDjnIZWN-K9Pfzyw)），将其中的文件夹 Ubpa 放到合适的位置，然后将其内的文件夹 bin 路径加到环境变量 Path 中
 - 下载 assets_v0.zip （[百度盘链接（提取码：m34i）](https://pan.baidu.com/s/11kuet_KtIvQ9MpbCM-0Jqw)），下载后把压缩包放到文件夹 `<build>/GAMES102_HW` 内，并把其中的 assets 放到 project 下）
