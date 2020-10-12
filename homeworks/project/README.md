@@ -51,7 +51,7 @@
   - 注意 where is the source code 是<project 路径>，下边的路径是 <project 路径>/build
   - 首次点击 configure 默认就是 vs2019 和 x64，这两者都是必要的
 
-  > configure 过程中会下载许多依赖库，耗时可能较久，由 git clone 速度而定。另外我们会提供编译好的依赖包（TODO），免去下载/编译的过程，但这样无法查阅源码。（有个关键步骤，下载 assets_v0.zip 特别耗时（几kb/s下载几MB文件），这里提供[百度盘链接（提取码：m34i）](https://pan.baidu.com/s/11kuet_KtIvQ9MpbCM-0Jqw)，大家下载后把压缩包放到文件夹 `<build>/GAMES102_HW` 内，并把其中的 assets 放到 project 下）
+  > configure 过程中会下载许多依赖库，耗时可能较久，由 git clone 速度而定。另外我们会提供编译好的依赖包（即方法二），免去下载/编译的过程，但这样无法查阅源码。
   >
   > 部分下载链接的域名是 github.io，可能访问失败，解决方案 TODO
 
@@ -65,7 +65,6 @@
 
 - 使用 Github Desktop 克隆此库 [GAMES 102](https://github.com/Ubpa/GAMES102)，注意路径应放到**较浅**的位置，如盘符根目录
 - 直接下载编译好的依赖库 Ubpa_v0.zip（[百度盘链接（提取码：x0i9）](https://pan.baidu.com/s/1KKloWnlDjnIZWN-K9Pfzyw)），将其中的文件夹 Ubpa 放到合适的位置，然后将其内的文件夹 bin 路径加到环境变量 Path 中
-- 下载 assets_v0.zip （[百度盘链接（提取码：m34i）](https://pan.baidu.com/s/11kuet_KtIvQ9MpbCM-0Jqw)），下载后把压缩包放到文件夹 `<build>/GAMES102_HW` 内，并把其中的 assets 放到 project 下）
 - 使用 CMake-Gui 构建 vs 2019 项目（此时会非常顺利，最终构建的项目内**仅含作业项目**，日后有需要在进行源码构建）
   - 注意 where is the source code 是<project 路径>，下边的路径是 <project 路径>/build
   - 首次点击 configure 默认就是 vs2019 和 x64，这两者都是必要的
