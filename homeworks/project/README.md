@@ -8,7 +8,7 @@
 
 - DirectX 12（用虚拟机的同学特别注意这点）
 
-- VS 2019（[下载链接](https://visualstudio.microsoft.com/zh-hans/vs/)）
+- VS 2019 16.7.5+（[下载链接](https://visualstudio.microsoft.com/zh-hans/vs/)）
 
 - Git（[下载链接](http://www.baidu.com/link?url=w93HUZZENOzPu-A7xAN5UzU0Rnd4gDpZDm5W6hhImQVTIgn9Zfzd33QN4vAt-sWj)）
 
