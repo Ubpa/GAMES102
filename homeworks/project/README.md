@@ -10,6 +10,8 @@
 
 - VS 2019 16.7.5+（[下载链接](https://visualstudio.microsoft.com/zh-hans/vs/)）
 
+  > 注意版本，有测试过 16.4.5 版本就不行
+
 - Git（[下载链接](http://www.baidu.com/link?url=w93HUZZENOzPu-A7xAN5UzU0Rnd4gDpZDm5W6hhImQVTIgn9Zfzd33QN4vAt-sWj)）
 
   > 在 CMake 的过程中需要调用 Git，注意把 git 目录下的文件夹 bin 路径添加到系统环境变量 Path 中，参考[教程](https://www.cnblogs.com/-mrl/p/11246666.html) 
