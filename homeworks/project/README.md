@@ -3,9 +3,11 @@
 ## 环境要求
 
 - Windows 10
+- DirectX 12（用虚拟机的同学特别注意这点）
 - VS 2019（[下载链接](https://visualstudio.microsoft.com/zh-hans/vs/)）
-- CMake 3.18.4（[下载链接](https://cmake.org/download/)，[简单使用方法的视频教程](https://www.bilibili.com/video/BV1Z7411z78n)，更详细的使用教程（TODO））
+- Git（[下载链接](http://www.baidu.com/link?url=w93HUZZENOzPu-A7xAN5UzU0Rnd4gDpZDm5W6hhImQVTIgn9Zfzd33QN4vAt-sWj)）
 - JDK（[下载链接](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html)）
+- CMake 3.18.4（[下载链接](https://cmake.org/download/)，[简单使用方法的视频教程](https://www.bilibili.com/video/BV1Z7411z78n)，更详细的使用教程（TODO））
 - 可选：assimp（[源码链接](https://github.com/assimp/assimp)）
 
 ## 构建方法
