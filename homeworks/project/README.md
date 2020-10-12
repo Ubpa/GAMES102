@@ -6,7 +6,11 @@
 
 - Windows 10
 
-- DirectX 12（用虚拟机的同学特别注意这点）
+  > 确保有“**图形工具**”
+  >
+  > 设置->应用和功能->可选功能，查看是否已安装“**图形工具**”，若无则需要手动安装（添加功能->图形工具->安装）
+
+- DirectX 12
 
 - VS 2019 16.7.5+（[下载链接](https://visualstudio.microsoft.com/zh-hans/vs/)）
 
@@ -102,7 +106,6 @@
 
 - Utopia：引擎框架。参考资料：[Utopia](https://github.com/Ubpa/Utopia)（内含文档，但并不丰富）
 - ECS：以便理解框架的逻辑执行方式，以及代码编写方式。参考资料：[UECS 文档](https://github.com/Ubpa/UECS)，[Unity ECS 文档](https://docs.unity3d.com/Packages/com.unity.entities@0.14/index.html) 
-- ImGui：简单易用的 UI 库。参考资料：[imgui](https://github.com/ocornut/imgui)。（一般直接从官方提供的 [example](https://github.com/ocornut/imgui#demo) 和 [demo](https://github.com/ocornut/imgui/blob/master/imgui_demo.cpp) 源码中学习使用方式。
-
+- ImGui：简单易用的 UI 库。参考资料：[imgui](https://github.com/ocornut/imgui)。（一般直接从官方提供的 [example](https://github.com/ocornut/imgui#demo) 和 [demo](https://github.com/ocornut/imgui/blob/master/imgui_demo.cpp) 源码中学习使用方式）
 
 
