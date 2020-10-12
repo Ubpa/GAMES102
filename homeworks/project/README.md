@@ -24,7 +24,7 @@
 
   > 有部分自动化工具用到了 java 的运行时，所以需要安装，并不会要求使用 java 编写程序
 
-- CMake 3.18.4（[下载链接](https://cmake.org/download/)，[简单使用方法的视频教程](https://www.bilibili.com/video/BV1Z7411z78n)，[更详细的使用教程](softwars/CMake.md)）
+- CMake 3.18.4（[下载链接](https://cmake.org/download/)，[简单使用方法的视频教程](https://www.bilibili.com/video/BV1Z7411z78n)，[更详细的使用教程](../../softwares/CMake.md)）
 
 - 可选：assimp（[源码链接](https://github.com/assimp/assimp)）
 
