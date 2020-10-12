@@ -5,16 +5,38 @@
 ## 环境要求
 
 - Windows 10
+
 - DirectX 12（用虚拟机的同学特别注意这点）
+
 - VS 2019（[下载链接](https://visualstudio.microsoft.com/zh-hans/vs/)）
+
 - Git（[下载链接](http://www.baidu.com/link?url=w93HUZZENOzPu-A7xAN5UzU0Rnd4gDpZDm5W6hhImQVTIgn9Zfzd33QN4vAt-sWj)）
+
+  > 在 CMake 的过程中需要调用 Git，注意把 git 目录下的文件夹 bin 路径添加到系统环境变量 Path 中，参考[教程](https://www.cnblogs.com/-mrl/p/11246666.html) 
+
+- Github Desktop（[下载链接](https://desktop.github.com/)）
+
+  > 希望同学尽量用 GitHub desktop 来克隆库，由于项目代码经常更新，用 GitHub desktop 方便拉取更新。更新可能导致冲突问题，详细解决方法请自行查询相关资料。
+
 - JDK（[下载链接](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html)）
+
+  > 有部分自动化工具用到了 java 的运行时，所以需要安装，并不会要求使用 java 编写程序
+
 - CMake 3.18.4（[下载链接](https://cmake.org/download/)，[简单使用方法的视频教程](https://www.bilibili.com/video/BV1Z7411z78n)，更详细的使用教程（TODO））
+
 - 可选：assimp（[源码链接](https://github.com/assimp/assimp)）
 
 ## 构建方法
 
-- 使用 CMake-Gui 构建 vs 2019 项目。configure 过程中会下载许多依赖库，耗时可能较久，由 git clone 速度而定。另外我们会提供编译好的依赖包（TODO），免去下载/编译的过程，但这样无法查阅源码。（有个关键步骤，下载 assets_v0.zip 特别耗时（几kb/s下载几MB文件），这里提供[百度盘链接（提取码：m34i）](https://pan.baidu.com/s/11kuet_KtIvQ9MpbCM-0Jqw)，大家下载后把压缩包放到文件夹 `<build>/GAMES102_HW` 内，并把其中的assets 放到 project 下）
+- 使用 Github Desktop 克隆此库 [GAMES 102](https://github.com/Ubpa/GAMES102) 
+
+- 使用 CMake-Gui 构建 vs 2019 项目
+
+  - 注意 where is the source code 是<project 路径>，下边的路径是 <project 路径>/build
+  - 首次点击 configure 默认就是 vs2019 和 x64，这两者都是必要的
+
+  > configure 过程中会下载许多依赖库，耗时可能较久，由 git clone 速度而定。另外我们会提供编译好的依赖包（TODO），免去下载/编译的过程，但这样无法查阅源码。（有个关键步骤，下载 assets_v0.zip 特别耗时（几kb/s下载几MB文件），这里提供[百度盘链接（提取码：m34i）](https://pan.baidu.com/s/11kuet_KtIvQ9MpbCM-0Jqw)，大家下载后把压缩包放到文件夹 `<build>/GAMES102_HW` 内，并把其中的assets 放到 project 下）
+
 - 打开项目，在解决方案资源栏里找到 GAMES102_HW_hw1，右键菜单中选“设为启动项目”，然后右键菜单中选“生成”。在等待较长时间的编译完成后，即可在菜单栏中点击“本地 Windows调试器”运行hw1空项目。你会看到一个引擎编辑器界面，在 Game 窗口中有 canvas，这将是作业的所需完成部分。
 
 ## 作业 1
