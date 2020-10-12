@@ -30,7 +30,7 @@
 
 ## 构建方法
 
-- 使用 Github Desktop 克隆此库 [GAMES 102](https://github.com/Ubpa/GAMES102) 
+- 使用 Github Desktop 克隆此库 [GAMES 102](https://github.com/Ubpa/GAMES102)，注意路径应放到**较浅**的位置，如盘符根目录
 
 - 使用 CMake-Gui 构建 vs 2019 项目
 
