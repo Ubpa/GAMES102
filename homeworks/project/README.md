@@ -90,7 +90,7 @@
 >
 > 如果你需要添加文件，你可以在 src 的合理位置放置代码文件，然后重新在 CMake-Gui 里 configure + generate，vs2019 会刷新项目从而包含新文件
 
-目前该系统中有画线段功能（在canvas左键拖拽即可），你需要修改这部分逻辑，如通过鼠标点击获取点集，对这些点集的 x 坐标进行排序，计算相应的曲线，对曲线采样并利用 `ImDrawList::AddLine` 来绘制 polyline（更多的绘制方法看 `ImDrawList` 定义）。
+目前该系统中有画线段功能（在canvas左键拖拽即可），你需要修改这部分逻辑，如通过鼠标点击获取点集，计算相应的曲线，对曲线采样并利用 `ImDrawList::AddLine` 来绘制 polyline（更多的绘制方法看 `ImDrawList` 定义）。
 
 作业题涉及多种曲线生成方法，因此你还应该用 `ImGui::RadioButton` 或者其他交互方式修改曲线类型。
 
