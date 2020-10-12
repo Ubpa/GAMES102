@@ -1,5 +1,7 @@
 # 作业项目
 
+项目代码变更记录：[clangelog.md](clangelog.md) 
+
 ## 环境要求
 
 - Windows 10
