@@ -34,6 +34,7 @@
   - 将独显设为默认显卡
   - 把 [Irradiance.hlsl](assets/shaders/Irradiance.hlsl) 第 99 行的 `1024u` 改小试试，如 `256u`，甚至 `1u`，`0u`
   - 把 [PreFilter.hlsl](assets/shaders/PreFilter.hlsl) 第 108 行的 `256u` 改小试试，如 `64u`，甚至 `1u`，`0u` 
+  - 另外，还可能是没有“图形工具”的原因，参考[教程](https://jingyan.baidu.com/article/4f7d57128c81415b201927b6.html)，如果安装不上，可以将 `build/_deps/utopia-src/src/App/DX12App/DX12App.cpp` 的第 263 - 270 行注释掉
 - 框架还处于快速开发中，鲁棒性有限，不良操作可能直接导致程序崩溃，有疑惑可联系助教
 
 ## 构建方法
