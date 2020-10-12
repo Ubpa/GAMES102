@@ -18,7 +18,7 @@
 
 2. 使用 Gauss 基函数的线性组合 $f(x)=b_0 + \sum_{i=1}^{n}b_i g_i(x)$  插值 $\{P_j\}$，其中
    $$
-   g(x)=\exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right),\mu=x_1,x_2,\dots,x_n
+   g_i(x)=\exp\left(-\frac{(x-x_i)^2}{2\sigma^2}\right)
    $$
    即对称轴在插值点上，$i=1,\dots,n$，缺省设 $\sigma =1$ 
 
