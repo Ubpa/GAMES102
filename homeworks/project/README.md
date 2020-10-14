@@ -97,7 +97,10 @@
 
 作业题涉及多种曲线生成方法，因此你还应该用 `ImGui::RadioButton` 或者其他交互方式修改曲线类型。
 
-作业需要用到矩阵计算，你可以使用 Eigen 库（[官网](http://eigen.tuxfamily.org/index.php?title=Main_Page)），将其源码（Eigen 文件夹）放到 `src/hw1`，接着删掉其中的 `CMakeLists.txt`，接着 cmake configure + generate 后即可将库添加到项目中。
+你可能需要用到矩阵计算，推荐使用纯头文件的 Eigen 库（[官网](http://eigen.tuxfamily.org/index.php?title=Main_Page)），添加进项目里的方式有两个
+
+- 简单：将其源码（Eigen 文件夹）放到 `src/hw1`，接着删掉其中的 `CMakeLists.txt`，接着 cmake configure + generate 后即可将库添加到项目中，后续用 `#include "<relative-path>/Eigen/<component>"` 来包含库。
+- :star:科学：将源码（Eigen 文件夹）放到文件夹 `include/_deps/` 内（自行创建），接着在 [src/hw1/CMakeLists.txt](src/hw1/CMakeLists.txt) 的 Add_Target 内添加一行 `INC "${PROJECT_SOURCE_DIR}/include/_deps"`，后续用 `#include <Eigen/<component>>"` 来包含库。
 
 对于不想使用鼠标交互方式作为输入的同学，我们将提供 **plot** 方式的 UI 减轻大家的负担（TODO）
 
