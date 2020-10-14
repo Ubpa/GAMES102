@@ -46,7 +46,7 @@
 
 ### 方法一
 
-此方法完全从源码构建，要求网络较好（比如能访问 github.io 等），如果不行请看[方法二](#方法二) 
+此方法完全从源码构建，如果不行请看[方法二](#方法二) 
 
 - 使用 Github Desktop 克隆此库 [GAMES 102](https://github.com/Ubpa/GAMES102)，注意路径应放到**较浅**的位置，如盘符根目录
 
@@ -57,8 +57,7 @@
 
   > configure 过程中会下载许多依赖库，耗时可能较久，由 git clone 速度而定。另外我们会提供编译好的依赖包（即方法二），免去下载/编译的过程，但这样无法查阅源码。
   >
-  > 部分下载链接的域名是 github.io，可能访问失败，解决方案 TODO
-
+  
 - 打开项目，在解决方案资源栏里找到 GAMES102_HW_hw1，右键菜单中选“设为启动项目”，然后右键菜单中选“生成”。在等待较长时间的编译完成后，即可在菜单栏中点击“本地 Windows调试器”运行hw1空项目。你会看到一个引擎编辑器界面，在 Game 窗口中有 canvas，这将是作业的所需完成部分。
 
 ### 方法 2
@@ -98,7 +97,7 @@
 
 作业题涉及多种曲线生成方法，因此你还应该用 `ImGui::RadioButton` 或者其他交互方式修改曲线类型。
 
-作业需要用到矩阵计算，你可以使用 Eigen 库（[官网](http://eigen.tuxfamily.org/index.php?title=Main_Page)），将其源码（Eigen 文件夹）放到 `src/hw1` 然后 cmake configure + generate 后即可将库添加到项目中。
+作业需要用到矩阵计算，你可以使用 Eigen 库（[官网](http://eigen.tuxfamily.org/index.php?title=Main_Page)），将其源码（Eigen 文件夹）放到 `src/hw1`，接着删掉其中的 `CMakeLists.txt`，接着 cmake configure + generate 后即可将库添加到项目中。
 
 对于不想使用鼠标交互方式作为输入的同学，我们将提供 **plot** 方式的 UI 减轻大家的负担（TODO）
 
