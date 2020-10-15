@@ -31,5 +31,4 @@
 - [廖雪峰 Git 教程](https://www.liaoxuefeng.com/wiki/896043488029600) 
 - [Git 教程 | 菜鸟教程](https://www.runoob.com/git/git-tutorial.html) 
 - [中文技术文档的写作规范](https://github.com/ruanyf/document-style-guide) 
-- test
 
