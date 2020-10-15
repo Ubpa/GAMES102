@@ -1,5 +1,4 @@
 #include <Utopia/App/Editor/Editor.h>
-
 #include <Utopia/App/Editor/InspectorRegistry.h>
 
 #include <UECS/World.h>
@@ -7,7 +6,9 @@
 #include "Components/CanvasData.h"
 #include "Systems/CanvasSystem.h"
 
-#ifndef NDEBUG
+//#define NDEBUG  // 关闭调试状态: #ifndef和#endif，#ifdef和#endif之间的代码会被忽略
+
+#ifndef NDEBUG  // 默认是开启调试状态. 
 #include <dxgidebug.h>
 #endif
 
