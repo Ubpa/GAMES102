@@ -20,4 +20,6 @@ Ubpa_AddTarget(
   MODE EXE
   LIB
     Ubpa::Utopia_App_Editor
+
+  INC "${PROJECT_SOURCE_DIR}/include/_deps"
 )

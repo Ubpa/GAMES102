@@ -4,6 +4,8 @@
 
 #include <_deps/imgui/imgui.h>
 
+#include <eigen3/Eigen/Eigen>
+
 using namespace Ubpa;
 
 void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
@@ -15,6 +17,7 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 		if (ImGui::Begin("Canvas")) {
 			ImGui::Checkbox("Enable grid", &data->opt_enable_grid);
 			ImGui::Checkbox("Enable context menu", &data->opt_enable_context_menu);
+			ImGui::Checkbox("Draw Power Function", &data->func_power);
 			ImGui::Text("Mouse Left: drag to add lines,\nMouse Right: drag to scroll, click for context menu.");
 
 			// Typically you would use a BeginChild()/EndChild() pair to benefit from a clipping region + own scrolling.
@@ -38,28 +41,26 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 			// Draw border and background color
 			ImGuiIO& io = ImGui::GetIO();
 			ImDrawList* draw_list = ImGui::GetWindowDrawList();
-			draw_list->AddRectFilled(canvas_p0, canvas_p1, IM_COL32(50, 50, 50, 255));
-			draw_list->AddRect(canvas_p0, canvas_p1, IM_COL32(255, 255, 255, 255));
+			draw_list->AddRectFilled(canvas_p0, canvas_p1, IM_COL32(50, 50, 50, 255));  // background color
+			draw_list->AddRect(canvas_p0, canvas_p1, IM_COL32(0, 0, 255, 255));  // border
 
 			// This will catch our interactions
 			ImGui::InvisibleButton("canvas", canvas_sz, ImGuiButtonFlags_MouseButtonLeft | ImGuiButtonFlags_MouseButtonRight);
 			const bool is_hovered = ImGui::IsItemHovered(); // Hovered
 			const bool is_active = ImGui::IsItemActive();   // Held
-			const ImVec2 origin(canvas_p0.x + data->scrolling[0], canvas_p0.y + data->scrolling[1]); // Lock scrolled origin
-			const pointf2 mouse_pos_in_canvas(io.MousePos.x - origin.x, io.MousePos.y - origin.y);
+			const ImVec2 origin(canvas_p0.x + data->scrolling[0], canvas_p0.y + data->scrolling[1]); // Lock scrolled origin, 画布的原点
+			const pointf2 mouse_pos_in_canvas(io.MousePos.x, io.MousePos.y);
 
-			// Add first and second point
-			if (is_hovered && !data->adding_line && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+			// 添加点
+			if (is_hovered && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
 			{
 				data->points.push_back(mouse_pos_in_canvas);
-				data->points.push_back(mouse_pos_in_canvas);
-				data->adding_line = true;
 			}
-			if (data->adding_line)
+
+			// Draw points
+			for (int n = 0; n < data->points.size(); n++)
 			{
-				data->points.back() = mouse_pos_in_canvas;
-				if (!ImGui::IsMouseDown(ImGuiMouseButton_Left))
-					data->adding_line = false;
+				draw_list->AddCircle(data->points[n], 2.0f, IM_COL32(0, 255, 255, 200), 0, 3);
 			}
 
 			// Pan (we use a zero mouse threshold when there's no context menu)
@@ -67,20 +68,17 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 			const float mouse_threshold_for_pan = data->opt_enable_context_menu ? -1.0f : 0.0f;
 			if (is_active && ImGui::IsMouseDragging(ImGuiMouseButton_Right, mouse_threshold_for_pan))
 			{
-				data->scrolling[0] += io.MouseDelta.x;
+				data->scrolling[0] += io.MouseDelta.x;  // ?
 				data->scrolling[1] += io.MouseDelta.y;
 			}
 
 			// Context menu (under default mouse threshold)
-			ImVec2 drag_delta = ImGui::GetMouseDragDelta(ImGuiMouseButton_Right);
+			ImVec2 drag_delta = ImGui::GetMouseDragDelta(ImGuiMouseButton_Right);  
 			if (data->opt_enable_context_menu && ImGui::IsMouseReleased(ImGuiMouseButton_Right) && drag_delta.x == 0.0f && drag_delta.y == 0.0f)
 				ImGui::OpenPopupContextItem("context");
 			if (ImGui::BeginPopup("context"))
 			{
-				if (data->adding_line)
-					data->points.resize(data->points.size() - 2);
-				data->adding_line = false;
-				if (ImGui::MenuItem("Remove one", NULL, false, data->points.size() > 0)) { data->points.resize(data->points.size() - 2); }
+				if (ImGui::MenuItem("Remove one", NULL, false, data->points.size() > 0)) { data->points.resize(data->points.size() - 1); }
 				if (ImGui::MenuItem("Remove all", NULL, false, data->points.size() > 0)) { data->points.clear(); }
 				ImGui::EndPopup();
 			}
@@ -91,13 +89,14 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 			{
 				const float GRID_STEP = 64.0f;
 				for (float x = fmodf(data->scrolling[0], GRID_STEP); x < canvas_sz.x; x += GRID_STEP)
-					draw_list->AddLine(ImVec2(canvas_p0.x + x, canvas_p0.y), ImVec2(canvas_p0.x + x, canvas_p1.y), IM_COL32(200, 200, 200, 40));
+					draw_list->AddLine(ImVec2(canvas_p0.x + x, canvas_p0.y), ImVec2(canvas_p0.x + x, canvas_p1.y), IM_COL32(0, 200, 0, 40));
 				for (float y = fmodf(data->scrolling[1], GRID_STEP); y < canvas_sz.y; y += GRID_STEP)
-					draw_list->AddLine(ImVec2(canvas_p0.x, canvas_p0.y + y), ImVec2(canvas_p1.x, canvas_p0.y + y), IM_COL32(200, 200, 200, 40));
+					draw_list->AddLine(ImVec2(canvas_p0.x, canvas_p0.y + y), ImVec2(canvas_p1.x, canvas_p0.y + y), IM_COL32(0, 200, 0, 40));
 			}
-			for (int n = 0; n < data->points.size(); n += 2)
-				draw_list->AddLine(ImVec2(origin.x + data->points[n][0], origin.y + data->points[n][1]), ImVec2(origin.x + data->points[n + 1][0], origin.y + data->points[n + 1][1]), IM_COL32(255, 255, 0, 255), 2.0f);
 			draw_list->PopClipRect();
+
+			// 多项式函数: 幂函数的线性组合
+
 		}
 
 		ImGui::End();
