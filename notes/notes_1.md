@@ -27,28 +27,7 @@ $$
 由插值条件 $p(x_i)=y_i,i=0,\cdots,n$ ，得到如下方程组：
 
 $$
-\left( \begin{array} {c}
-1 &x _ 0 &x _ 0^2 &\dots &x _ o^n \newline
-1 &x _ 1 &x _ 1^2 &\dots &x _ 1^n \newline
-1 &x _ 2 &x _ 2^2 &\dots &x _ 2^n \newline
-\vdots &\vdots &\vdots &\ddots &\vdots\newline
-1 &x _ n &x _ n^2 &\dots &x _ n^n \newline
-\end{array} \right)
-\left( \begin{array} {c}
-a _ 0 \newline
-a _ 1 \newline
-a _ 2 \newline
-\vdots \newline
-a _ n
-\end{array} \right)
-=
-\left( \begin{array} {c}
-y _ 0 \newline
-y _ 1 \newline
-y _ 2 \newline
-\vdots \newline
-y _ n
-\end{array} \right)
+\left( \begin{array} {c} 1 &x _ 0 &x _ 0^2 &\dots &x _ o^n \newline 1 &x _ 1 &x _ 1^2 &\dots &x _ 1^n \newline 1 &x _ 2 &x _ 2^2 &\dots &x _ 2^n \newline \vdots &\vdots &\vdots &\ddots &\vdots\newline 1 &x _ n &x _ n^2 &\dots &x _ n^n \newline \end{array} \right) \left( \begin{array} {c} a _ 0 \newline a _ 1 \newline a _ 2 \newline \vdots \newline a _ n \end{array} \right) = \left( \begin{array} {c} y _ 0 \newline y _ 1 \newline y _ 2 \newline \vdots \newline y _ n \end{array} \right)
 $$
 
 系数矩阵为 **Vandermonde** 矩阵，其行列式非零，因此方程组有唯一解。
