@@ -108,7 +108,7 @@ $$
 
 该种内积下，范数的定义与向量的2范数一致。
 
-> 上述定义中的下标 $h$ 表示对离散内积与离散范数的指代，类似1-范数的定义 $||x||_1=\sum_{i=1}^n |x_i|$ ，无其他特殊含义。
+> 上述定义中的下标 $h$ 表示对离散内积与离散范数的指代，类似1-范数的定义 $||x|| _ 1=\sum _ {i=1}^n |x _ i|$ ，无其他特殊含义。
 
 设 $\Phi=span\{\phi_0,\phi_1,\cdots,\phi_n\}$
 
@@ -125,12 +125,12 @@ $$
 关于系数 $\{a_0,a_1,\cdots,a_n\}$ 最小
 
 $$
-\begin{align*}
-&||f(x)-(a_0\phi_0(x)+a_1\phi_1(x)+\cdots+a_n\phi_n(x))||_h^2 \newline
-=& ||f||_h^2-2(f,a_0\phi_0(x)+a_1\phi_1(x)+\cdots+a_n\phi_n(x))_h+||a_0\phi_0(x)+a_1\phi_1(x)+\cdots+a_n\phi_n(x)||_h^2 \newline
-=&||f||_h^2-2\sum_{k=0}^n a_k(f,\phi_k)_h+\sum_{i,k=0}^n a_i a_k(\phi_i,\phi_k)_h \newline
-=&Q(a_0,a_1,\cdots,a_n)
-\end{align*}
+\begin{aligned}
+&||f(x)-(a _ 0\phi _ 0(x)+a _ 1\phi _ 1(x)+\cdots+a _ n\phi _ n(x))|| _ h^2 \newline
+=& ||f|| _ h^2-2(f,a _ 0\phi _ 0(x)+a _ 1\phi _ 1(x)+\cdots+a _ n\phi _ n(x)) _ h+||a _ 0\phi _ 0(x)+a _ 1\phi _ 1(x)+\cdots+a _ n\phi _ n(x)|| _ h^2 \newline
+=&||f|| _ h^2-2\sum _ {k=0}^n a _ k(f,\phi _ k) _ h+\sum _ {i,k=0}^n a _ i a _ k(\phi _ i,\phi _ k) _ h \newline
+=&Q(a _ 0,a _ 1,\cdots,a _ n)
+\end{aligned}
 $$
 
 由于它关于系数 ${a_0,a_1,\cdots,a_n}$ 最小，因此有
@@ -145,22 +145,7 @@ $$
 写成矩阵形式有：
 
 $$
-\left( \begin{array} {c}
-(\phi_0,\phi_0)_h & \dots & (\phi_0,\phi_n)_h \newline
-\vdots & \ddots & \vdots \newline
-(\phi_n,\phi_0)_h & \dots &(\phi_n,\phi_n)_h
-\end{array} \right)
-\left( \begin{array} {c}
-a_0 \newline
-\vdots \newline
-a_n
-\end{array} \right)
-=
-\left( \begin{array} {c}
-(f,\phi_0)_h\newline
-\vdots \newline
-(f,\phi_n)_h
-\end{array} \right)
+\left( \begin{array} {c} (\phi _ 0,\phi _ 0) _ h & \dots & (\phi _ 0,\phi _ n) _ h \newline \vdots & \ddots & \vdots \newline (\phi _ n,\phi _ 0) _ h & \dots &(\phi _ n,\phi _ n) _ h \end{array} \right) \left( \begin{array} {c} a _ 0 \newline \vdots \newline a _ n \end{array} \right) = \left( \begin{array} {c} (f,\phi _ 0) _ h\newline \vdots \newline (f,\phi _ n) _ h \end{array} \right)
 $$
 
 #### 2.1.2 线性拟合
@@ -168,19 +153,7 @@ $$
 **例1**：取 $\Phi$ 为线性多项式空间，函数空间的基为 $\{1,x\}$ ,拟合曲线为 $y=a+bx$ ，则法方程为：
 
 $$
-\left( \begin{array} {c}
-(1,1)_h  & (1，x)_h \newline
-(x,1)_h  &(x,x)_h
-\end{array} \right)
-\left( \begin{array} {c}
-a \newline
-b
-\end{array} \right)
-=
-\left( \begin{array} {c}
-(f,1)_h\newline
-(f,x)_h
-\end{array} \right)
+\left( \begin{array} {c} (1,1) _ h  & (1，x) _ h \newline (x,1) _ h  &(x,x) _ h \end{array} \right) \left( \begin{array} {c} a \newline b \end{array} \right) = \left( \begin{array} {c} (f,1) _ h\newline (f,x) _ h \end{array} \right)
 $$
 
 #### 2.1.3 二次拟合
@@ -188,22 +161,7 @@ $$
 **例2**：取 $\Phi$ 为线性多项式空间，函数空间的基为 $\{1,x,x^2\}$ ,拟合曲线为 $y=a_0+a_1 x+a_2 x^2$ ，则法方程为：
 
 $$
-\left( \begin{array} {c}
-(1,1)_h  & (1，x)_h & (1,x^2)_h\newline
-(x,1)_h  &(x,x)_h &(x,x^2)_h\newline
-(x^2,1)_h  &(x^2,x)_h &(x^2,x^2)_h\newline
-\end{array} \right)
-\left( \begin{array} {c}
-a_0 \newline
-a_1 \newline
-a_2
-\end{array} \right)
-=
-\left( \begin{array} {c}
-(f,1)_h\newline
-(f,x)_h \newline
-(f,x^2)_h
-\end{array} \right)
+\left( \begin{array} {c} (1,1) _ h  & (1，x) _ h & (1,x^2) _ h\newline (x,1) _ h  &(x,x) _ h &(x,x^2) _ h\newline (x^2,1) _ h  &(x^2,x) _ h &(x^2,x^2) _ h\newline \end{array} \right) \left( \begin{array} {c} a _ 0 \newline a _ 1 \newline a _ 2 \end{array} \right) = \left( \begin{array} {c} (f,1) _ h\newline (f,x) _ h \newline (f,x^2) _ h \end{array} \right)
 $$
 
 ## 3. Weierstrass 第一逼近定理
@@ -244,10 +202,10 @@ $$
 3. 
    $$
    \begin{align*}
-       &B_n(1,x)=\sum_{k=0}^n C_n^k x^k (1-x)^{n-k}=1 \newline
-       &B_n(t,x)=\sum_{k=0}^n \frac{k}{n} C_n^k x^k (1-x)^{n-k}=x \newline
-       &B_n(t^2,x)=\sum_{k=0}^n \frac{k^2}{n^2} C_n^k x^k (1-x)^{n-k}=x^2+\frac{x-x^2}{n}
-       \end{align*}
+     &B_n(1,x)=\sum_{k=0}^n C_n^k x^k (1-x)^{n-k}=1 \newline
+     &B_n(t,x)=\sum_{k=0}^n \frac{k}{n} C_n^k x^k (1-x)^{n-k}=x \newline
+     &B_n(t^2,x)=\sum_{k=0}^n \frac{k^2}{n^2} C_n^k x^k (1-x)^{n-k}=x^2+\frac{x-x^2}{n}
+   \end{align*}
    $$
 
 函数 $(t-s)^2 $ 在 $ B_n $ 映射下的像(视 $ s $ 为常数)：
