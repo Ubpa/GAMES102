@@ -2,6 +2,8 @@
 
 #include "../Components/CanvasData.h"
 
+#include <math.h> 
+
 #include <_deps/imgui/imgui.h>
 
 #include <eigen3/Eigen/Eigen>
@@ -53,10 +55,10 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 			// 添加点
 			if (is_hovered && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
 			{
-				data->points.push_back(mouse_pos_in_canvas);
+				data->points.push_back((mouse_pos_in_canvas[0]+origin.x, mouse_pos_in_canvas[1]+origin.y));
 			}
 
-			// Draw points
+			// Draw points 画点
 			for (int n = 0; n < data->points.size(); n++)
 			{
 				draw_list->AddCircle(data->points[n], 2.0f, IM_COL32(0, 255, 255, 200), 0, 3);
@@ -95,9 +97,56 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 			draw_list->PopClipRect();
 
 			// 多项式函数: 幂函数的线性组合
-			//if(data->)
+			if (data->points.size() >= 2)  // 少于两个点, 插值无意义
+			{
+				draw_func_power(draw_list, data->points);
+			}
 		}
 
 		ImGui::End();
 	});
+}
+
+void CanvasSystem::draw_func_power(ImDrawList* draw_list, std::vector<Ubpa::pointf2> v)
+{
+	int size = v.size();
+	Eigen::MatrixXf X(size, size);
+	Eigen::VectorXf y(size);
+	Eigen::VectorXf a(size);  // 参数 X * a = y
+	float thickness = 4.0f;
+	ImU32 color = IM_COL32(255, 0, 0, 0);
+	for (int i = 0; i < size; i++)
+	{
+		for (int j = 0; j < size; j++)
+		{
+			X(i, j) = pow(v[i][0], j);  // x_i^j
+		}
+	}
+
+	for (int i = 0; i < size; i++)
+	{
+		y[i] = v[i][1];
+	}
+
+	a = X.reverse() * y;
+
+	//for (int i = 0; i < v.size()-1; i++)
+	//{
+	//	draw_list->AddLine(ImVec2(v[i][0], v[i][1]), ImVec2(v[i+1][0], v[i+1][1]), color, thickness);
+	//}
+
+	for (int x = 0; x < 2; x+=1)
+	{
+		Eigen::VectorXf x_v1(size);
+		Eigen::VectorXf x_v2(size);
+		for (int i = 0; i < size; i++)
+		{
+			x_v1(i) = pow(x, i);
+			x_v2(i) = pow(x + 1, i);
+		}
+
+		auto y1 = a * x_v1.transpose();
+		auto y2 = a * x_v2.transpose();
+		draw_list->AddLine(ImVec2(x, y1(0)), ImVec2(x+1, y2(0)), color, thickness);
+	}
 }
