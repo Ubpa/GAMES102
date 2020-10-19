@@ -28,26 +28,26 @@ $$
 
 $$
 \left( \begin{array} {c}
-1 &x_0 &x_0^2 &\dots &x_o^n \newline
-1 &x_1 &x_1^2 &\dots &x_1^n \newline
-1 &x_2 &x_2^2 &\dots &x_2^n \newline
+1 &x _ 0 &x _ 0^2 &\dots &x _ o^n \newline
+1 &x _ 1 &x _ 1^2 &\dots &x _ 1^n \newline
+1 &x _ 2 &x _ 2^2 &\dots &x _ 2^n \newline
 \vdots &\vdots &\vdots &\ddots &\vdots\newline
-1 &x_n &x_n^2 &\dots &x_n^n \newline
+1 &x _ n &x _ n^2 &\dots &x _ n^n \newline
 \end{array} \right)
 \left( \begin{array} {c}
-a_0 \newline
-a_1 \newline
-a_2 \newline
+a _ 0 \newline
+a _ 1 \newline
+a _ 2 \newline
 \vdots \newline
-a_n
+a _ n
 \end{array} \right)
 =
 \left( \begin{array} {c}
-y_0 \newline
-y_1 \newline
-y_2 \newline
+y _ 0 \newline
+y _ 1 \newline
+y _ 2 \newline
 \vdots \newline
-y_n
+y _ n
 \end{array} \right)
 $$
 
@@ -483,7 +483,7 @@ $$
 
 解得： $A_0=\frac{1}{2\pi}\int_{-\pi}^{\pi} f(t)$ 。
 
-这样就求得了第一个系数 $A_0$ 的表达式，接下来求 $a_n$ 和 $b_n$ 的表达式。用 $\cos(k\omega t)$ 乘\eqref{4}式两边得：
+这样就求得了第一个系数 $A_0$ 的表达式，接下来求 $a_n$ 和 $b_n$ 的表达式。用 $\cos(k\omega t)$ 乘 (4) 式两边得：
 
 $$
 f(t)\cdot \cos(k\omega t)=A_0 \cos(k\omega t)+\sum_{n=1}^{\infty}[a_n\cos(n\omega t)\cos(k\omega t)+b_n\sin(n\omega t)\cos(k\omega t)]
