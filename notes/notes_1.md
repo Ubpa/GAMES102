@@ -27,28 +27,28 @@ $$
 由插值条件 $p(x_i)=y_i,i=0,\cdots,n$ ，得到如下方程组：
 
 $$
-\begin{pmatrix} 
-1 &x_0 &x_0^2 &\dots &x_o^n \\
-1 &x_1 &x_1^2 &\dots &x_1^n \\
-1 &x_2 &x_2^2 &\dots &x_2^n \\
-\vdots &\vdots &\vdots &\ddots \vdots\\
-1 &x_n &x_n^2 &\dots &x_n^n \\
-\end{pmatrix} 
-\begin{pmatrix} 
-a_0 \\
-a_1 \\
-a_2 \\
-\vdots \\
+\left( \begin{array} {c}
+1 &x_0 &x_0^2 &\dots &x_o^n \newline
+1 &x_1 &x_1^2 &\dots &x_1^n \newline
+1 &x_2 &x_2^2 &\dots &x_2^n \newline
+\vdots &\vdots &\vdots &\ddots &\vdots\newline
+1 &x_n &x_n^2 &\dots &x_n^n \newline
+\end{array} \right)
+\left( \begin{array} {c}
+a_0 \newline
+a_1 \newline
+a_2 \newline
+\vdots \newline
 a_n
-\end{pmatrix} 
+\end{array} \right)
 =
-\begin{pmatrix} 
-y_0 \\
-y_1 \\
-y_2 \\
-\vdots \\
+\left( \begin{array} {c}
+y_0 \newline
+y_1 \newline
+y_2 \newline
+\vdots \newline
 y_n
-\end{pmatrix} 
+\end{array} \right)
 $$
 
 系数矩阵为 **Vandermonde** 矩阵，其行列式非零，因此方程组有唯一解。
@@ -92,7 +92,7 @@ $$
 所以**Newton插值多项式**表示为：
 
 $$
-N_n(x)=f(x_0)+f[x_0,x_1](x-x_0)+\cdots+f[x_0,x_1,\cdots,x_n](x-x_0)\cdots(x-x_{n-1})
+N _ n(x)=f(x _ 0)+f[x _ 0,x _ 1](x-x _ 0)+\cdots+f[x _ 0,x _ 1,\cdots,x _ n](x-x _ 0)\cdots(x-x _ {n-1})
 $$
 
 ## 2. 函数拟合
@@ -107,7 +107,6 @@ $$
 ### 2.1 函数拟合的最小二乘法问题
 
 **定义**： $f(x)$ 为定义在去区间 $[a,b]$ 上的函数， $\{x_i\}_{i=0}^m$ 为区间上 $m+1$ 个互不相同的点， $\Phi$ 为给定的某一函数类。求 $\Phi$ 上的函数 $\phi(x)$ 满足 $f(x)$ 和 $\phi(x)$ 在给定的 $m+1$ 个点上的距离最小，如果这种距离取为2-范数的话，则称为最小二乘问题。即：求 $\phi(x) \in \Phi$ ，使得：
-
 $$
 R_2=\sqrt{\sum_{i=0}^m (\phi(x_i)-f(x_i))^2}
 $$
@@ -119,13 +118,11 @@ $$
 首先给出如下离散内积与离散范数的定义：
 
 **定义**：函数 $f,g$ 的关于离散点列 $\{x_i\}_{i=0}^m$ 的离散内积为：
-
 $$
 (f,g)_h=\sum_{i=0}^n f(x_i)g(x_i)
 $$
 
 **定义**：函数 $f$ 的离散范数为：
-
 $$
 ||f||_h=\sqrt{(f,f)_h}
 $$
@@ -150,9 +147,9 @@ $$
 
 $$
 \begin{align*}
-&||f(x)-(a_0\phi_0(x)+a_1\phi_1(x)+\cdots+a_n\phi_n(x))||_h^2 \\
-=& ||f||_h^2-2(f,a_0\phi_0(x)+a_1\phi_1(x)+\cdots+a_n\phi_n(x))_h+||a_0\phi_0(x)+a_1\phi_1(x)+\cdots+a_n\phi_n(x)||_h^2 \\
-=&||f||_h^2-2\sum_{k=0}^n a_k(f,\phi_k)_h+\sum_{i,k=0}^n a_i a_k(\phi_i,\phi_k)_h \\
+&||f(x)-(a_0\phi_0(x)+a_1\phi_1(x)+\cdots+a_n\phi_n(x))||_h^2 \newline
+=& ||f||_h^2-2(f,a_0\phi_0(x)+a_1\phi_1(x)+\cdots+a_n\phi_n(x))_h+||a_0\phi_0(x)+a_1\phi_1(x)+\cdots+a_n\phi_n(x)||_h^2 \newline
+=&||f||_h^2-2\sum_{k=0}^n a_k(f,\phi_k)_h+\sum_{i,k=0}^n a_i a_k(\phi_i,\phi_k)_h \newline
 =&Q(a_0,a_1,\cdots,a_n)
 \end{align*}
 $$
@@ -161,7 +158,7 @@ $$
 
 $$
 \begin{align*}
-&\frac{\partial Q}{\partial a_i}=0 ,\ \ \ i=0,1,\cdots,n \\
+&\frac{\partial Q}{\partial a_i}=0 ,\ \ \ i=0,1,\cdots,n \newline
 i.e. \ \ &\sum_{k=0}^n a_k(\phi_i,\phi_k)_h=(f,\phi_i)_h,\ \ \ i=0,1,\cdots,n 
 \end{align*}
 $$
@@ -169,22 +166,22 @@ $$
 写成矩阵形式有：
 
 $$
-\begin{pmatrix} 
-(\phi_0,\phi_0)_h & \dots & (\phi_0,\phi_n)_h \\
-\vdots & \ddots & \vdots \\
+\left( \begin{array} {c}
+(\phi_0,\phi_0)_h & \dots & (\phi_0,\phi_n)_h \newline
+\vdots & \ddots & \vdots \newline
 (\phi_n,\phi_0)_h & \dots &(\phi_n,\phi_n)_h
-\end{pmatrix}  
-\begin{pmatrix} 
-a_0 \\
-\vdots \\
+\end{array} \right)
+\left( \begin{array} {c}
+a_0 \newline
+\vdots \newline
 a_n
-\end{pmatrix} 
+\end{array} \right)
 =
-\begin{pmatrix} 
-(f,\phi_0)_h\\
-\vdots \\
+\left( \begin{array} {c}
+(f,\phi_0)_h\newline
+\vdots \newline
 (f,\phi_n)_h
-\end{pmatrix}
+\end{array} \right)
 $$
 
 #### 2.1.2 线性拟合
@@ -192,19 +189,19 @@ $$
 **例1**：取 $\Phi$ 为线性多项式空间，函数空间的基为 $\{1,x\}$ ,拟合曲线为 $y=a+bx$ ，则法方程为：
 
 $$
-\begin{pmatrix} 
-(1,1)_h  & (1，x)_h \\
+\left( \begin{array} {c}
+(1,1)_h  & (1，x)_h \newline
 (x,1)_h  &(x,x)_h
-\end{pmatrix}  
-\begin{pmatrix} 
-a \\
+\end{array} \right)
+\left( \begin{array} {c}
+a \newline
 b
-\end{pmatrix} 
+\end{array} \right)
 =
-\begin{pmatrix} 
-(f,1)_h\\
+\left( \begin{array} {c}
+(f,1)_h\newline
 (f,x)_h
-\end{pmatrix}
+\end{array} \right)
 $$
 
 #### 2.1.3 二次拟合
@@ -212,22 +209,22 @@ $$
 **例2**：取 $\Phi$ 为线性多项式空间，函数空间的基为 $\{1,x,x^2\}$ ,拟合曲线为 $y=a_0+a_1 x+a_2 x^2$ ，则法方程为：
 
 $$
-\begin{pmatrix} 
-(1,1)_h  & (1，x)_h & (1,x^2)_h\\
-(x,1)_h  &(x,x)_h &(x,x^2)_h\\
-(x^2,1)_h  &(x^2,x)_h &(x^2,x^2)_h\\
-\end{pmatrix}  
-\begin{pmatrix} 
-a_0 \\
-a_1 \\
+\left( \begin{array} {c}
+(1,1)_h  & (1，x)_h & (1,x^2)_h\newline
+(x,1)_h  &(x,x)_h &(x,x^2)_h\newline
+(x^2,1)_h  &(x^2,x)_h &(x^2,x^2)_h\newline
+\end{array} \right)
+\left( \begin{array} {c}
+a_0 \newline
+a_1 \newline
 a_2
-\end{pmatrix} 
+\end{array} \right)
 =
-\begin{pmatrix} 
-(f,1)_h\\
-(f,x)_h \\
+\left( \begin{array} {c}
+(f,1)_h\newline
+(f,x)_h \newline
 (f,x^2)_h
-\end{pmatrix}
+\end{array} \right)
 $$
 
 ## 3. Weierstrass 第一逼近定理
@@ -246,7 +243,7 @@ $$
 
 $$
 \begin{align*}
-B_n: &\ \ X \ \rightarrow \ \ Y \\
+B_n: &\ \ X \ \rightarrow \ \ Y \newline
  & f(t) \mapsto B_n(f,x)=\sum_{k=0}^n f(\frac{k}{n})C_n^k x^k (1-x)^{n-k}
 \end{align*}
 $$
@@ -268,8 +265,8 @@ $$
 3. 
    $$
    \begin{align*}
-       &B_n(1,x)=\sum_{k=0}^n C_n^k x^k (1-x)^{n-k}=1 \\
-       &B_n(t,x)=\sum_{k=0}^n \frac{k}{n} C_n^k x^k (1-x)^{n-k}=x \\
+       &B_n(1,x)=\sum_{k=0}^n C_n^k x^k (1-x)^{n-k}=1 \newline
+       &B_n(t,x)=\sum_{k=0}^n \frac{k}{n} C_n^k x^k (1-x)^{n-k}=x \newline
        &B_n(t^2,x)=\sum_{k=0}^n \frac{k^2}{n^2} C_n^k x^k (1-x)^{n-k}=x^2+\frac{x-x^2}{n}
        \end{align*}
    $$
@@ -278,7 +275,7 @@ $$
 
 $$
 \begin{align*}
-    B_n((t-s)^2,x)&= B_n(t^2,x)-2sB_n(t,x)+s^2B_n(1,x) \\
+    B_n((t-s)^2,x)&= B_n(t^2,x)-2sB_n(t,x)+s^2B_n(1,x) \newline
     &=x^2+\frac{x-x^2}{n}-2sx+s^2=(x-s)^2+\frac{x-x^2}{n}
     \end{align*}
 $$
@@ -332,7 +329,6 @@ $$
 ## 4. Weierstrass 第二逼近定理
 
 **定理**：设 $f(x)$ 是以 $2\pi$ 为周期的连续函数，则存在三角多项式序列一致收敛于 $f(x)$ 。也就是对于任意给定的 $\epsilon > 0$ ，存在三角多项式 $T(x)$ ，使得:
-
 $$
 |T(x)-f(x)| < \epsilon
 $$
@@ -365,11 +361,11 @@ $$
 
 $$
 \begin{align*}
-   &\cos^2x =\frac{1}{2}(1+\cos {2x}), \\
-   &\cos^3x =\frac{1}{4}(3\cos x+\cos{3x}),\\
-   &\cdots,\\
-   &\cos^{2n}x=\frac{1}{2^{2n-1}}(\sum_{k=1}^{n-1} C_{2n}^k \cos{2(n-k)x}+\frac{1}{2}C_{2n}^n),\\
-   &\cos^{2n+1}x=\frac{1}{2^{2n}}\sum_{k=0}^n C_{2n+1}^k \cos{(2n-2k+1)x}\\
+   &\cos^2x =\frac{1}{2}(1+\cos {2x}), \newline
+   &\cos^3x =\frac{1}{4}(3\cos x+\cos{3x}),\newline
+   &\cdots,\newline
+   &\cos^{2n}x=\frac{1}{2^{2n-1}}(\sum_{k=1}^{n-1} C_{2n}^k \cos{2(n-k)x}+\frac{1}{2}C_{2n}^n),\newline
+   &\cos^{2n+1}x=\frac{1}{2^{2n}}\sum_{k=0}^n C_{2n+1}^k \cos{(2n-2k+1)x}\newline
 \end{align*}
 $$
 
@@ -479,8 +475,8 @@ $$
 
 $$
 \begin{align*}
-\int_{-\pi}^{\pi} f(t) dt &=\int_{-\pi}^{\pi} A_0dt +\int_{-\pi}^{\pi} \sum_{n=1}^{\infty}[a_n\cos(n\omega t)+b_n\sin(n\omega t)] dt \\
-&=\int_{-\pi}^{\pi} A_0 dt+0\\
+\int_{-\pi}^{\pi} f(t) dt &=\int_{-\pi}^{\pi} A_0dt +\int_{-\pi}^{\pi} \sum_{n=1}^{\infty}[a_n\cos(n\omega t)+b_n\sin(n\omega t)] dt \newline
+&=\int_{-\pi}^{\pi} A_0 dt+0\newline
 &=2\pi A_0
 \end{align*}
 $$
@@ -503,9 +499,9 @@ $$
 
 $$
 \begin{align*}
-\int_{-\pi}^{\pi}f(t)\cdot \cos(n\omega t) dt&=a_n\ int_{-\pi}^{\pi} \cos^2(n\omega t) dt \\
-&=\frac{a_n}{2}\int_{-\pi}^{\pi}(1+\cos{2n\omega t}) dt \\
-&=\frac{a_n}{2}(\int_{-\pi}^{\pi} 1 dt+\int_{-\pi}^{\pi} \cos{2n\omega t} dt)\\
+\int_{-\pi}^{\pi}f(t)\cdot \cos(n\omega t) dt&=a_n\ int_{-\pi}^{\pi} \cos^2(n\omega t) dt \newline
+&=\frac{a_n}{2}\int_{-\pi}^{\pi}(1+\cos{2n\omega t}) dt \newline
+&=\frac{a_n}{2}(\int_{-\pi}^{\pi} 1 dt+\int_{-\pi}^{\pi} \cos{2n\omega t} dt)\newline
 &=\frac{a_n}{2} \dot 2\pi =a_n\pi
 \end{align*}
 $$
