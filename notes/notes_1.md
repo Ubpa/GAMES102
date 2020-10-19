@@ -18,7 +18,7 @@ $$
 
 **定理**：若 $x_i$ 两两不同，则对任意给定的 $y_i$ ，存在唯一的次数至多是 $n$ 次的多项式 $p_n$ ，使得 $p_n(x_i)=y_i，i=0,\cdots,n$ 。
 
-证明：在幂基 $\{1,x,\cdots,x^n\}$ 下待定多项式 $p$ 的形式为：
+证明：在幂基 $\lbrace 1,x,\cdots,x^n \rbrace $ 下待定多项式 $p$ 的形式为：
 
 $$
 p(x)=a_0+a_1x+a_2 x^2+\cdots+a_n x^n
@@ -62,7 +62,7 @@ $$
 
 $k $阶差商：
 
-设$ \{x_0,x_1,\cdots,x_k\} $互不相同，$ f(x) $关于$ \{x_0,x_1,\cdots,x_k\} $的$ k $阶差商为：
+设$ \lbrace x_0,x_1,\cdots,x_k \rbrace  $互不相同，$ f(x) $关于$ \lbrace x_0,x_1,\cdots,x_k \rbrace  $的$ k $阶差商为：
 
 $$
 f[x_0,x_1,\cdots,x_k]=\frac{f[x_1,\cdots,x_k]-f[x_0,x_1,\cdots,x_{k-1}]}{x_k-x_0}
@@ -85,7 +85,7 @@ $$
 
 ### 2.1 函数拟合的最小二乘法问题
 
-**定义**： $f(x)$ 为定义在去区间 $[a,b]$ 上的函数， $\{x _ i\} _ {i=0}^m$ 为区间上 $m+1$ 个互不相同的点， $\Phi$ 为给定的某一函数类。求 $\Phi$ 上的函数 $\phi(x)$ 满足 $f(x)$ 和 $\phi(x)$ 在给定的 $m+1$ 个点上的距离最小，如果这种距离取为2-范数的话，则称为最小二乘问题。即：求 $\phi(x) \in \Phi$ ，使得：
+**定义**： $f(x)$ 为定义在去区间 $[a,b]$ 上的函数， $\lbrace x _ i \rbrace  _ {i=0}^m$ 为区间上 $m+1$ 个互不相同的点， $\Phi$ 为给定的某一函数类。求 $\Phi$ 上的函数 $\phi(x)$ 满足 $f(x)$ 和 $\phi(x)$ 在给定的 $m+1$ 个点上的距离最小，如果这种距离取为2-范数的话，则称为最小二乘问题。即：求 $\phi(x) \in \Phi$ ，使得：
 
 $$
 R_2=\sqrt{\sum_{i=0}^m (\phi(x_i)-f(x_i))^2}
@@ -97,9 +97,9 @@ $$
 
 首先给出如下离散内积与离散范数的定义：
 
-**定义**：函数 $f,g$ 的关于离散点列 $\{x _ i\} _ {i=0}^m$ 的离散内积为：
+**定义**：函数 $f,g$ 的关于离散点列 $\lbrace x _ i \rbrace  _ {i=0}^m$ 的离散内积为：
 $$
-(f,g)_h=\sum_{i=0}^n f(x_i)g(x_i)
+(f,g) _ h=\sum _ {i=0}^n f(x _ i)g(x _ i)
 $$
 
 **定义**：函数 $f$ 的离散范数为：
@@ -111,7 +111,7 @@ $$
 
 > 上述定义中的下标 $h$ 表示对离散内积与离散范数的指代，类似1-范数的定义 $||x|| _ 1=\sum _ {i=1}^n |x _ i|$ ，无其他特殊含义。
 
-设 $\Phi=span\{\phi_0,\phi_1,\cdots,\phi_n\}$
+设 $\Phi=span\lbrace \phi_0,\phi_1,\cdots,\phi_n \rbrace $
 
 $$
 \phi(x)=a_0\phi_0(x)+a_1\phi_1(x)+\cdots+a_n\phi_n(x)
@@ -123,7 +123,7 @@ $$
 ||f(x)-(a_0\phi_0(x)+a_1\phi_1(x)+\cdots+a_n\phi_n(x))||_h
 $$
 
-关于系数 $\{a_0,a_1,\cdots,a_n\}$ 最小
+关于系数 $\lbrace a_0,a_1,\cdots,a_n \rbrace $ 最小
 
 $$
 \begin{aligned}
@@ -151,7 +151,7 @@ $$
 
 #### 2.1.2 线性拟合
 
-**例1**：取 $\Phi$ 为线性多项式空间，函数空间的基为 $\{1,x\}$ ,拟合曲线为 $y=a+bx$ ，则法方程为：
+**例1**：取 $\Phi$ 为线性多项式空间，函数空间的基为 $\lbrace 1,x \rbrace $ ,拟合曲线为 $y=a+bx$ ，则法方程为：
 
 $$
 \left( \begin{array} {c} (1,1) _ h  & (1，x) _ h \newline (x,1) _ h  &(x,x) _ h \end{array} \right) \left( \begin{array} {c} a \newline b \end{array} \right) = \left( \begin{array} {c} (f,1) _ h\newline (f,x) _ h \end{array} \right)
@@ -159,7 +159,7 @@ $$
 
 #### 2.1.3 二次拟合
 
-**例2**：取 $\Phi$ 为线性多项式空间，函数空间的基为 $\{1,x,x^2\}$ ,拟合曲线为 $y=a_0+a_1 x+a_2 x^2$ ，则法方程为：
+**例2**：取 $\Phi$ 为线性多项式空间，函数空间的基为 $\lbrace 1,x,x^2 \rbrace $ ,拟合曲线为 $y=a_0+a_1 x+a_2 x^2$ ，则法方程为：
 
 $$
 \left( \begin{array} {c} (1,1) _ h  & (1，x) _ h & (1,x^2) _ h\newline (x,1) _ h  &(x,x) _ h &(x,x^2) _ h\newline (x^2,1) _ h  &(x^2,x) _ h &(x^2,x^2) _ h\newline \end{array} \right) \left( \begin{array} {c} a _ 0 \newline a _ 1 \newline a _ 2 \end{array} \right) = \left( \begin{array} {c} (f,1) _ h\newline (f,x) _ h \newline (f,x^2) _ h \end{array} \right)
@@ -367,7 +367,7 @@ $$
 
 ## 5. 距离空间的完备性
 
-**定义**：设 $X$ 是距离空间， $\{x_n\}\subset X$ 。 $\{x_n\}$ 是 $X$ 中的基本列，是指对任意 $\epsilon > 0$ ，存在 $N=N(\epsilon)$ ，当 $m,n> N$ 时，有 $\rho(x_m,x_n) < \epsilon$ 。
+**定义**：设 $X$ 是距离空间， $\lbrace x_n \rbrace \subset X$ 。 $\lbrace x_n \rbrace $ 是 $X$ 中的基本列，是指对任意 $\epsilon > 0$ ，存在 $N=N(\epsilon)$ ，当 $m,n> N$ 时，有 $\rho(x_m,x_n) < \epsilon$ 。
 
 **定义**：称 $X$ 是完备距离空间，是指 $X$ 中的任何基本列都收敛于 $X$ 中的点。
 
