@@ -12,7 +12,7 @@
 #include <dxgidebug.h>
 #endif
 
-extern "C" __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
+extern "C" __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;  // https://www.cnblogs.com/sdragonx/p/12183194.html
 
 using namespace Ubpa::Utopia;
 
