@@ -68,13 +68,14 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 			{
 				if (ImGui::MenuItem("Remove one", NULL, false, data->points.size() > 0)) 
 				{ 
-					data->points.resize(data->points.size() - 1); 
-					points_size = data->points.size();  // 要记得维护point_size!
+					data->points.resize(data->points.size() - 1);
+					if (data->points.size() == 1)  // !!! 设置为-1, 当点数有2时才会重新绘制
+						points_size = -1;
 				}
 				if (ImGui::MenuItem("Remove all", NULL, false, data->points.size() > 0)) 
 				{ 
 					data->points.clear(); 
-					points_size = data->points.size();
+					points_size = -1;
 				}
 				ImGui::EndPopup();
 			}
@@ -99,6 +100,8 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 				{
 					if (points_size != data->points.size())
 					{
+						CString s = "hello\n";
+						OutputDebugString(s);
 						points_size = data->points.size();
 						// need to recaculate the paramater 
 						draw_func_power(draw_list, data->points, origin, true);
@@ -111,7 +114,7 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 			}
 		}
 		ImGui::End();
-		});
+	});
 }
 
 /*
