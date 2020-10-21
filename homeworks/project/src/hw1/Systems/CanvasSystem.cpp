@@ -61,13 +61,21 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 			}
 
 			// Context menu (under default mouse threshold)
-			ImVec2 drag_delta = ImGui::GetMouseDragDelta(ImGuiMouseButton_Right);  
+			ImVec2 drag_delta = ImGui::GetMouseDragDelta(ImGuiMouseButton_Right);
 			if (data->opt_enable_context_menu && ImGui::IsMouseReleased(ImGuiMouseButton_Right) && drag_delta.x == 0.0f && drag_delta.y == 0.0f)
 				ImGui::OpenPopupContextItem("context");
 			if (ImGui::BeginPopup("context"))
 			{
-				if (ImGui::MenuItem("Remove one", NULL, false, data->points.size() > 0)) { data->points.resize(data->points.size() - 1); }
-				if (ImGui::MenuItem("Remove all", NULL, false, data->points.size() > 0)) { data->points.clear(); }
+				if (ImGui::MenuItem("Remove one", NULL, false, data->points.size() > 0)) 
+				{ 
+					data->points.resize(data->points.size() - 1); 
+					points_size = data->points.size();  // 要记得维护point_size!
+				}
+				if (ImGui::MenuItem("Remove all", NULL, false, data->points.size() > 0)) 
+				{ 
+					data->points.clear(); 
+					points_size = data->points.size();
+				}
 				ImGui::EndPopup();
 			}
 
@@ -114,46 +122,58 @@ needRecalculate: 是否需要重新计算参数a
 */
 void CanvasSystem::draw_func_power(ImDrawList* draw_list, std::vector<Ubpa::pointf2> v, ImVec2 origin, bool needRecalculate)
 {
-
+	static std::vector<float> elastic_a;  // 因为静态的VectorXf要确定size, 但是点可以增加也可以减少, 所以使用std::vector来做中转
+	static int min_x;
+	static int max_x;
+	static ImU32 color = IM_COL32(255, 0, 0, 200);
+	static float thickness = 1.5f;
 	int size = v.size();
-	Eigen::MatrixXf X(size, size);
-	Eigen::VectorXf y(size);
-	Eigen::VectorXf a(size);  // 参数 X dot a = y
-	float thickness = 1.5f;
-	ImU32 color = IM_COL32(255, 0, 0, 200);
 
-	int min_x = v[0][0];  // 获得添加的点中最小的x值, 坐标都是整数, 所以用int
-	int max_x = v[0][0];  // 获得添加的点中最大的x值
-	for (int i = 0; i < size; i++)
+	///////////////////// 计算参数a ////////////////////////////
+	Eigen::VectorXf a(size);
+	if (needRecalculate)  // 点的数量发生了变化, 需要重新计算a
 	{
-		if (v[i][0] < min_x) min_x = v[i][0];
-		if (v[i][0] > max_x) max_x = v[i][0];
-		for (int j = 0; j < size; j++)
+		Eigen::MatrixXf X(size, size);
+		Eigen::VectorXf y(size);
+		Eigen::VectorXf a(size);  // 参数 X dot a = y
+
+		min_x = v[0][0];  // 获得添加的点中最小的x值, 坐标都是整数, 所以用int
+		max_x = v[0][0];  // 获得添加的点中最大的x值
+		for (int i = 0; i < size; i++)
 		{
-			X(i, j) = pow(v[i][0], j);  // x_i^j
+			if (v[i][0] < min_x) min_x = v[i][0];
+			if (v[i][0] > max_x) max_x = v[i][0];
+			// 初始化X
+			for (int j = 0; j < size; j++)
+				X(i, j) = pow(v[i][0], j);  // x_i^j
+			// 初始化y
+			y[i] = v[i][1];
 		}
-	}
 
+		a = X.inverse() * y;
+
+		// 先封到vecto中
+		elastic_a.clear();  // 必须要清空一下, 因为覆盖的话, 如果点比之前变少了, 有的会没有覆盖掉
+		for (int i = 0; i < size; i++)
+			elastic_a.push_back(a[i]);
+	}
+	// 如果不需要重新计算的话, 就直接取之前封好的a; 需要重新计算的话, a在上面也已经封到了elastic_a里了
 	for (int i = 0; i < size; i++)
-	{
-		y[i] = v[i][1];
-	}
-
-	a = X.inverse() * y;
+		a[i] = elastic_a[i];
 
 	///////////////////// 画线条 ////////////////////////////
 	//int density = 200;  // 插值的点数
 	//int interval = 1 > (max_x - min_x) / density ? 1 : (max_x - min_x) / density;  // 插值点之间的间隔, 最小值是1
-	int interval = 1;
+	int interval = 3;
 	static int y_tmp = -1;
-	for (int x1 = min_x-20; x1 < max_x+20; x1 += interval)  // 前后多画一些, 防止线接近垂直于x轴时没过点
+	for (int x1 = min_x - 100; x1 < max_x + 100; x1 += interval)  // 前后多画一些, 防止线接近垂直于x轴时没过点
 	{
 		int x2 = x1 + interval;
 		int y1;  // 由于是坐标点都是整型, 所以会有精度损失, 画出来的线条会锯齿
 		int y2;
 
 		// 计算y1
-		if(y_tmp == -1)  // 如果是画曲线的第一个小片段(曲线是由很多小线段拼起来的), y1要重新算
+		if (y_tmp == -1)  // 如果是画曲线的第一个小片段(曲线是由很多小线段拼起来的), y1要重新算
 		{
 			Eigen::VectorXf x_v1(size);
 			for (int i = 0; i < size; i++)
@@ -172,7 +192,7 @@ void CanvasSystem::draw_func_power(ImDrawList* draw_list, std::vector<Ubpa::poin
 		y_tmp = y2; // 保存计算好的y2值, 这是下一个线段的起点, 用来画下一个线段
 
 		draw_list->AddLine(ImVec2(x1 + origin.x, y1 + origin.y),
-						   ImVec2(x2 + origin.x, y2 + origin.y), color, thickness);
+			ImVec2(x2 + origin.x, y2 + origin.y), color, thickness);
 	}
 	y_tmp = -1;  // 要复位一下, 下一波更新的时候线条的起点才正常
 }
