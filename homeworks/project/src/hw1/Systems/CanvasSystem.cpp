@@ -100,8 +100,6 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 				{
 					if (points_size != data->points.size())
 					{
-						CString s = "hello\n";
-						OutputDebugString(s);
 						points_size = data->points.size();
 						// need to recaculate the paramater 
 						draw_func_power(draw_list, data->points, origin, true);
