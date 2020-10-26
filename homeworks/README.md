@@ -31,5 +31,6 @@
 > - 本地查看：使用 Markdown 编辑器 Typora（[下载链接](https://www.typora.io/windows/typora-setup-x64.exe?)），需要手动打开“**内联公式**”功能（Typora 菜单 -> 偏好设置 -> Markdown -> Markdown 扩展语法 -> 勾选“内联公式”）
 
 1. [函数拟合](hw1/) 
-2. [神经网络拟合](hw2/) 
+2. [神经网络曲线拟合](hw2/) 
+3. [平面点列曲线拟合](hw3/) 
 
