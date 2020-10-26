@@ -110,4 +110,10 @@
 - ECS：以便理解框架的逻辑执行方式，以及代码编写方式。参考资料：[UECS 文档](https://github.com/Ubpa/UECS)，[Unity ECS 文档](https://docs.unity3d.com/Packages/com.unity.entities@0.14/index.html) 
 - ImGui：简单易用的 UI 库。参考资料：[imgui](https://github.com/ocornut/imgui)。（一般直接从官方提供的 [example](https://github.com/ocornut/imgui#demo) 和 [demo](https://github.com/ocornut/imgui/blob/master/imgui_demo.cpp) 源码中学习使用方式）
 
+## 作业 3
 
+根据作业要求，通过修改 [CanvasSystem.cpp](src/hw3/Systems/CanvasSystem.cpp) 完成作业
+
+> 所需数据存放在 [CanvasData.h](src/hw3/Components/CanvasData.h) 中，你可以调整它
+
+作业 3 和作业 1 是类似的
