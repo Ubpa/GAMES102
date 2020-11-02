@@ -35,16 +35,14 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 			ImGui::InvisibleButton("canvas", canvas_sz, ImGuiButtonFlags_MouseButtonLeft | ImGuiButtonFlags_MouseButtonRight);
 			const bool is_hovered = ImGui::IsItemHovered(); // Hovered
 			const bool is_active = ImGui::IsItemActive();   // Held
-			const ImVec2 origin(canvas_p0.x + data->scrolling[0], canvas_p0.y + data->scrolling[1]); // 
-			const pointf2 mouse_pos_in_canvas(io.MousePos.x, io.MousePos.y);  // 运行窗口中Game中的坐标, 不是Canvas的坐标
-			const pointf2 point_pos(io.MousePos.x - origin.x, io.MousePos.y - origin.y);  // 点相对Canvas的坐标
-
+			const ImVec2 origin(canvas_p0.x + data->scrolling[0], canvas_p0.y + data->scrolling[1]); // canvas的位置
+			const pointf2 mouse_pos_in_canvas(io.MousePos.x - origin.x, io.MousePos.y - origin.y);  // 鼠标点击位置减去canvas位置, 得到相对于canvas的位置
 
 			static int points_size = -1;  // 通过点的数量来判断是否需要重新绘制线条(重新计算参数)
 			// 添加点
 			if (is_hovered && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
 			{
-				data->points.push_back(point_pos);
+				data->points.push_back(mouse_pos_in_canvas);
 			}
 
 			// Draw points 画点
