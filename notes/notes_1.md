@@ -50,6 +50,12 @@ $$
 L_n(x)=\sum_{k=0}^n y_k l_k(x)
 $$
 
+举个例子:
+
+三个点的展开
+
+<img src="notes_1.assets/image-20201102214621727.png" alt="image-20201102214621727" style="zoom:50%;" />
+
 #### 1.2.2 Newton插值
 
 **定义**：
