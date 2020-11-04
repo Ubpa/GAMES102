@@ -7,24 +7,23 @@
 
 using namespace Ubpa;
 
-float Polynomial(std::vector<Ubpa::pointf2>points, int x)
+float Lagrange(std::vector<Ubpa::pointf2>points, int x)
 {
-	//int size = points.size();
-	//float sum = 0;
-	//for (int k = 0; k < size; k++)
-	//{
-	//	float l = 1;
-	//	for (int j = 0; j < size; j++)
-	//	{
-	//		if (j == k) { continue; }
-	//		l *= x - points[j][0] / points[k][0] - points[j][0];
-	//	}
-	//	sum += points[k][1] * l;
-	//}
-
-	//return sum;
-	return points[0][1];
+	float sum = 0;
+	for (int k = 0; k < points.size(); k++)
+	{
+		float base = 1;
+		for (int j = 0; j < points.size(); j++)
+		{
+			if (j == k) { continue; }
+			base *= (x - points[j][0]) / (points[k][0] - points[j][0]);
+		}
+		sum += points[k][1] * base;
+	}
+	return sum;
 }
+
+
 
 void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 	schedule.RegisterCommand([](Ubpa::UECS::World* w) {
@@ -57,33 +56,17 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 			const ImVec2 origin(canvas_p0.x + data->scrolling[0], canvas_p0.y + data->scrolling[1]); // canvas的位置
 			const pointf2 mouse_pos_in_canvas(io.MousePos.x - origin.x, io.MousePos.y - origin.y);  // 鼠标点击位置减去canvas位置, 得到相对于canvas的位置
 
+			static bool needReCalculate = true;
 			// 添加点
 			if (is_hovered && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
 			{
 				data->points.push_back(mouse_pos_in_canvas);
-
-				// 找出要画的线条的起点和终点
-				int minX = INT_MAX;
-				int maxX = INT_MIN;
-				for (int i = 0; i < data->points.size(); i++) 
-				{
-					if (data->points[i][0] < minX){ minX = data->points[i][0]; }
-					if (data->points[i][0] > maxX){ maxX = data->points[i][0]; }
-				}
-
-				// 重新计算所有点的坐标, 并保存到容器中
-				int wrapLength = 10; // 在最小和最大以外多画的点数
-				int step = 1;  // 每step个像素之间画一条线
-				data->LagrangeResults.clear();
-				for (int x = minX - wrapLength; x < maxX + wrapLength; x+=step)
-				{
-					data->LagrangeResults.push_back(ImVec2(x, Polynomial(data->points, x)));
-				}
+				needReCalculate = true;
 			}
 
 			// Draw points 画点
 			for (int n = 0; n < data->points.size(); n++)
-				draw_list->AddCircleFilled(data->points[n] + origin, 3.0f, IM_COL32(0, 255, 255, 200));
+				draw_list->AddCircleFilled(data->points[n] + origin, 5.0f, IM_COL32(0, 255, 255, 200));
 
 			// Pan (we use a zero mouse threshold when there's no context menu)
 			// You may decide to make that threshold dynamic based on whether the mouse is hovering something etc.
@@ -100,8 +83,8 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 				ImGui::OpenPopupContextItem("context");
 			if (ImGui::BeginPopup("context"))
 			{
-				if (ImGui::MenuItem("Remove one", NULL, false, data->points.size() > 0)) { data->points.resize(data->points.size() - 1); }
-				if (ImGui::MenuItem("Remove all", NULL, false, data->points.size() > 0)) { data->points.clear(); }
+				if (ImGui::MenuItem("Remove one", NULL, false, data->points.size() > 0)) { data->points.resize(data->points.size() - 1); needReCalculate = true; }
+				if (ImGui::MenuItem("Remove all", NULL, false, data->points.size() > 0)) { data->points.clear(); needReCalculate = true; }
 				ImGui::EndPopup();
 			}
 
@@ -117,17 +100,38 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 			}
 			draw_list->PopClipRect();
 
+			// if add new points or remove points, 则需要更新要绘制的点
+			if (needReCalculate)
+			{
+				// 找出要画的线条的起点和终点
+				int minX = INT_MAX;
+				int maxX = INT_MIN;
+				for (int i = 0; i < data->points.size(); i++)
+				{
+					if (data->points[i][0] < minX) { minX = data->points[i][0]; }
+					if (data->points[i][0] > maxX) { maxX = data->points[i][0]; }
+				}
+
+				// 重新计算所有点的坐标, 并保存到容器中
+				int wrapLength = 10; // 在最小和最大以外多画的点数
+				int step = 1;  // 每step个像素之间画一条线
+				data->LagrangeResults.clear();
+				for (int x = minX - wrapLength; x < maxX + wrapLength; x += step)
+				{
+					data->LagrangeResults.push_back(ImVec2(origin.x + x, origin.y + Lagrange(data->points, x)));
+				}
+				needReCalculate = false;
+			}
 
 			if (data->points.size() >= 2)  // 少于两个点, 插值无意义
 			{
 				// 画拉格朗日插值的线
 				if (data->opt_lagrange)
 				{
-					draw_list->AddPolyline(data->LagrangeResults.data(), data->LagrangeResults.size(), IM_COL32(64, 128, 255, 255), false, 1.0f);
+					draw_list->AddPolyline(data->LagrangeResults.data(), data->LagrangeResults.size(), IM_COL32(64, 128, 255, 255), false, 3.5f);
 				}
 			}
 		}
 		ImGui::End();
 	});
 }
-
