@@ -61,7 +61,7 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 			if (is_hovered && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
 			{
 				data->points.push_back(mouse_pos_in_canvas);
-				needReCalculate = true;
+				needReCalculate = true;  // 需要重新计算绘制的点
 			}
 
 			// Draw points 画点
@@ -100,6 +100,7 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 			}
 			draw_list->PopClipRect();
 
+			// 计算与绘制
 			// if add new points or remove points, 则需要更新要绘制的点
 			if (needReCalculate)
 			{
@@ -118,7 +119,8 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 				data->LagrangeResults.clear();
 				for (int x = minX - wrapLength; x < maxX + wrapLength; x += step)
 				{
-					data->LagrangeResults.push_back(ImVec2(origin.x + x, origin.y + Lagrange(data->points, x)));
+					data->LagrangeResults.push_back(ImVec2(x, Lagrange(data->points, x)));
+					//data->LagrangeResults.push_back(ImVec2(origin.x + x, origin.y + Lagrange(data->points, x)));
 				}
 				needReCalculate = false;
 			}
@@ -128,7 +130,13 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 				// 画拉格朗日插值的线
 				if (data->opt_lagrange)
 				{
-					draw_list->AddPolyline(data->LagrangeResults.data(), data->LagrangeResults.size(), IM_COL32(64, 128, 255, 255), false, 3.5f);
+					/*draw_list->AddPolyline(data->LagrangeResults.data(), data->LagrangeResults.size(), IM_COL32(64, 128, 255, 255), false, 3.5f);*/
+					for (int i = 0; i < data->LagrangeResults.size()-1; i++)
+					{
+						draw_list->AddLine(ImVec2(data->LagrangeResults[i][0] + origin.x, data->LagrangeResults[i][1] + origin.y), 
+							ImVec2(data->LagrangeResults[i+1][0] + origin.x, data->LagrangeResults[i+1][1]), IM_COL32(64, 128, 255, 255), 3.5f);
+					}
+					
 				}
 			}
 		}
