@@ -16,7 +16,7 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 		if (ImGui::Begin("Canvas")) {
 			//ImGui::Checkbox("Enable grid", &data->opt_enable_grid);
 			//ImGui::Checkbox("Enable context menu", &data->opt_enable_context_menu);
-			ImGui::Checkbox("Draw Power Function", &data->func_power);
+			ImGui::Checkbox("Draw Power Function", &data->opt_lagrange);
 
 			// Using InvisibleButton() as a convenience 1) it will advance the layout cursor and 2) allows us to use IsItemHovered()/IsItemActive()
 			ImVec2 canvas_p0 = ImGui::GetCursorScreenPos();      // ImDrawList API uses screen coordinates!
@@ -94,7 +94,7 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 			// 多项式函数: 幂函数的线性组合
 			if (data->points.size() >= 2)  // 少于两个点, 插值无意义
 			{
-				if (data->func_power)
+				if (data->opt_lagrange)
 				{
 					if (points_size != data->points.size())
 					{
@@ -119,7 +119,7 @@ v: 用来取点的信息
 origin: 用来确定画布的位置
 needRecalculate: 是否需要重新计算参数a
 */
-void CanvasSystem::draw_func_power(ImDrawList* draw_list, std::vector<Ubpa::pointf2> v, ImVec2 origin, bool needRecalculate)
+void draw_func_power(ImDrawList* draw_list, std::vector<Ubpa::pointf2> v, ImVec2 origin, bool needRecalculate)
 {
 	static std::vector<float> elastic_a;  // 因为静态的VectorXf要确定size, 但是点可以增加也可以减少, 所以使用std::vector来做中转
 	static int min_x;

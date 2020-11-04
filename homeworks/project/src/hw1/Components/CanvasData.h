@@ -11,7 +11,7 @@ struct CanvasData {
 	bool opt_enable_grid{ true };  // 是否显示网格
 	bool opt_enable_context_menu{ true };  // 是否开启右键菜单栏
 	
-	bool func_power{ true };  // 幂函数
+	bool opt_lagrange{ true };  // 幂函数
 };
 
 #include "details/CanvasData_AutoRefl.inl"
