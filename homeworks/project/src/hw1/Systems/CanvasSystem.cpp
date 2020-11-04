@@ -9,11 +9,12 @@ using namespace Ubpa;
 
 float Lagrange(std::vector<Ubpa::pointf2>points, int x)
 {
+	int size = points.size();
 	float sum = 0;
-	for (int k = 0; k < points.size(); k++)
+	for (int k = 0; k < size; k++)
 	{
 		float base = 1;
-		for (int j = 0; j < points.size(); j++)
+		for (int j = 0; j < size; j++)
 		{
 			if (j == k) { continue; }
 			base *= (x - points[j][0]) / (points[k][0] - points[j][0]);
@@ -21,6 +22,34 @@ float Lagrange(std::vector<Ubpa::pointf2>points, int x)
 		sum += points[k][1] * base;
 	}
 	return sum;
+}
+
+/*
+点在函数顶端
+运算结果复用 
+theta可调 ticked
+*/
+float Gauss(std::vector<Ubpa::pointf2>points, int x, float theta)
+{
+	int size = points.size();
+	
+	// G*b =y  ->  b = G^-1*b
+	Eigen::MatrixXf G(size, size);
+	Eigen::VectorXf y(size);
+	Eigen::VectorXf b(size);
+	for (int row = 0; row < size; row++)
+		for (int col = 0; col < size; col++)
+			G(row, col) = exp(-((points[row][0] - points[col][0]) * (points[row][0] - points[col][0])) / (2 * theta * theta));
+	for (int i = 0; i < size; i++)
+		y(i) = points[i][1];
+
+	b = G.inverse() * y;
+
+	float ret = 0;
+	for (int i = 0; i < size; i++)
+		ret += b[i] * exp(-((x - points[i][0]) * (x - points[i][0])) / (2 * theta * theta));
+	
+	return ret;
 }
 
 
@@ -32,9 +61,15 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 			return;
 
 		if (ImGui::Begin("Canvas")) {
+			static bool needReCalculate = true;
+
 			//ImGui::Checkbox("Enable grid", &data->opt_enable_grid);
 			//ImGui::Checkbox("Enable context menu", &data->opt_enable_context_menu);
 			ImGui::Checkbox("Lagrange", &data->opt_lagrange);
+			ImGui::Checkbox("Gauss", &data->opt_gauss);  ImGui::SameLine(120);
+			if (ImGui::SliderFloat("Theta", &data->GaussTheta, 0.0f, 300.0f))
+				needReCalculate = true;
+
 
 			// Using InvisibleButton() as a convenience 1) it will advance the layout cursor and 2) allows us to use IsItemHovered()/IsItemActive()
 			ImVec2 canvas_p0 = ImGui::GetCursorScreenPos();      // ImDrawList API uses screen coordinates!
@@ -56,7 +91,7 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 			const ImVec2 origin(canvas_p0.x + data->scrolling[0], canvas_p0.y + data->scrolling[1]); // canvas的位置
 			const pointf2 mouse_pos_in_canvas(io.MousePos.x - origin.x, io.MousePos.y - origin.y);  // 鼠标点击位置减去canvas位置, 得到相对于canvas的位置
 
-			static bool needReCalculate = true;
+			
 			// 添加点
 			if (is_hovered && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
 			{
@@ -117,27 +152,29 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 				int wrapLength = 10; // 在最小和最大以外多画的点数
 				int step = 1;  // 每step个像素之间画一条线
 				data->LagrangeResults.clear();
+				data->GaussResults.clear();
 				for (int x = minX - wrapLength; x < maxX + wrapLength; x += step)
 				{
 					data->LagrangeResults.push_back(ImVec2(x, Lagrange(data->points, x)));
-					//data->LagrangeResults.push_back(ImVec2(origin.x + x, origin.y + Lagrange(data->points, x)));
+					data->GaussResults.push_back(ImVec2(x, Gauss(data->points, x, data->GaussTheta)));
 				}
 				needReCalculate = false;
 			}
 
-			if (data->points.size() >= 2)  // 少于两个点, 插值无意义
+			if (data->points.size() >= 2)  // 少于两个点, 画线无意义
 			{
+				static int thickness = 2.0f;
 				// 画拉格朗日插值的线
 				if (data->opt_lagrange)
-				{
-					/*draw_list->AddPolyline(data->LagrangeResults.data(), data->LagrangeResults.size(), IM_COL32(64, 128, 255, 255), false, 3.5f);*/
 					for (int i = 0; i < data->LagrangeResults.size()-1; i++)
-					{
-						draw_list->AddLine(ImVec2(data->LagrangeResults[i][0] + origin.x, data->LagrangeResults[i][1] + origin.y), 
-							ImVec2(data->LagrangeResults[i+1][0] + origin.x, data->LagrangeResults[i+1][1]), IM_COL32(64, 128, 255, 255), 3.5f);
-					}
-					
-				}
+						draw_list->AddLine(ImVec2(data->LagrangeResults[i][0]   + origin.x, data->LagrangeResults[i][1] + origin.y), 
+							               ImVec2(data->LagrangeResults[i+1][0] + origin.x, data->LagrangeResults[i+1][1] + origin.y), IM_COL32(64, 128, 255, 255), thickness);
+				// 画高斯查之后的线
+				if (data->opt_gauss)
+					for (int i = 0; i < data->GaussResults.size() - 1; i++)
+						draw_list->AddLine(ImVec2(data->GaussResults[i][0]     + origin.x, data->GaussResults[i][1] + origin.y),
+										   ImVec2(data->GaussResults[i + 1][0] + origin.x, data->GaussResults[i + 1][1] + origin.y), IM_COL32(128, 255, 255, 255), thickness);
+
 			}
 		}
 		ImGui::End();
