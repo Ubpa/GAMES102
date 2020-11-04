@@ -10,6 +10,7 @@ using namespace Ubpa;
 float Lagrange(std::vector<Ubpa::pointf2>points, int x)
 {
 	int size = points.size();
+
 	float sum = 0;
 	for (int k = 0; k < size; k++)
 	{
@@ -28,7 +29,7 @@ float Gauss(std::vector<Ubpa::pointf2>points, int x, float theta)
 {
 	int size = points.size();
 	
-	// G*b =y  ->  b = G^-1*b
+	// Gb =y  ->  b = G^{-1}b
 	Eigen::MatrixXf G(size, size);
 	Eigen::VectorXf y(size);
 	Eigen::VectorXf b(size);
@@ -47,7 +48,38 @@ float Gauss(std::vector<Ubpa::pointf2>points, int x, float theta)
 	return ret;
 }
 
+float LeastSquares(std::vector<Ubpa::pointf2>points, int x, int m)
+{
+	int size = points.size();
 
+	// B^{T}Y = B^{T}B\alpha  ->  \alpha = (B^{T}B)^{-1}B^{T}Y
+	Eigen::MatrixXf B(size, m);
+	Eigen::VectorXf Y(size);
+	Eigen::VectorXf alpha(size);
+	for (int i = 0; i < size; i++)
+	{
+		for (int j = 0; j < m; j++)
+			B(i, j) = pow(points[i][0], j);
+		Y(i) = points[i][1];
+	}
+	alpha = (B.transpose() * B).inverse() * B.transpose() * Y;
+	
+	float ret = 0;
+	for (int i = 0; i < size; i++)
+		ret += alpha[i] * pow(x, i);
+
+	return ret;
+}
+
+/*
+offset: 偏移量, 一般是画布的原点位置
+*/
+void drawLine(ImDrawList* draw_list, ImVec2 offset, std::vector<ImVec2> results, ImU32 color, float thickness)
+{
+	for (int i = 0; i < results.size() - 1; i++)
+		draw_list->AddLine(ImVec2(results[i][0]   + offset.x, results[i][1] + offset.y),
+			               ImVec2(results[i+1][0] + offset.x, results[i+1][1] + offset.y), color, thickness);
+}
 
 void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 	schedule.RegisterCommand([](Ubpa::UECS::World* w) {
@@ -61,10 +93,14 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 			//ImGui::Checkbox("Enable grid", &data->opt_enable_grid);
 			//ImGui::Checkbox("Enable context menu", &data->opt_enable_context_menu);
 			ImGui::Checkbox("Lagrange", &data->opt_lagrange);
-			ImGui::Checkbox("Gauss", &data->opt_gauss);  ImGui::SameLine(120);
+			ImGui::Checkbox("Gauss", &data->opt_gauss);
+			ImGui::SameLine(200);
 			if (ImGui::SliderFloat("Theta", &data->GaussTheta, 0.0f, 300.0f))
 				needReCalculate = true;
-
+			ImGui::Checkbox("LeastSquares", &data->opt_least_squares);
+			ImGui::SameLine(200);
+			if (ImGui::SliderInt("m", &data->LeastSquaresM, 1.0f, data->points.size()<=1?10: data->points.size()))
+				needReCalculate = true;
 
 			// Using InvisibleButton() as a convenience 1) it will advance the layout cursor and 2) allows us to use IsItemHovered()/IsItemActive()
 			ImVec2 canvas_p0 = ImGui::GetCursorScreenPos();      // ImDrawList API uses screen coordinates!
@@ -135,8 +171,8 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 			if (needReCalculate)
 			{
 				// 找出要画的线条的起点和终点
-				int minX = INT_MAX;
-				int maxX = INT_MIN;
+				int minX = FLT_MAX;
+				int maxX = FLT_MIN;
 				for (int i = 0; i < data->points.size(); i++)
 				{
 					if (data->points[i][0] < minX) { minX = data->points[i][0]; }
@@ -152,24 +188,17 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 				{
 					data->LagrangeResults.push_back(ImVec2(x, Lagrange(data->points, x)));
 					data->GaussResults.push_back(ImVec2(x, Gauss(data->points, x, data->GaussTheta)));
+					data->LeastSquaresResults.push_back(ImVec2(x, LeastSquares(data->points, x, data->LeastSquaresM)));
 				}
 				needReCalculate = false;
 			}
 
 			if (data->points.size() >= 2)  // 少于两个点, 画线无意义
 			{
-				static int thickness = 2.0f;
-				// 画拉格朗日插值的线
-				if (data->opt_lagrange)
-					for (int i = 0; i < data->LagrangeResults.size()-1; i++)
-						draw_list->AddLine(ImVec2(data->LagrangeResults[i][0]   + origin.x, data->LagrangeResults[i][1] + origin.y), 
-							               ImVec2(data->LagrangeResults[i+1][0] + origin.x, data->LagrangeResults[i+1][1] + origin.y), IM_COL32(64, 128, 255, 255), thickness);
-				// 画高斯查之后的线
-				if (data->opt_gauss)
-					for (int i = 0; i < data->GaussResults.size() - 1; i++)
-						draw_list->AddLine(ImVec2(data->GaussResults[i][0]     + origin.x, data->GaussResults[i][1] + origin.y),
-										   ImVec2(data->GaussResults[i + 1][0] + origin.x, data->GaussResults[i + 1][1] + origin.y), IM_COL32(128, 255, 255, 255), thickness);
-
+				static float thickness = 2.0f;
+				if (data->opt_lagrange) drawLine(draw_list, origin, data->LagrangeResults, IM_COL32(64, 128, 255, 255), thickness);  // 画拉格朗日插值的线
+				if (data->opt_gauss) drawLine(draw_list, origin, data->GaussResults, IM_COL32(64, 128, 255, 255), thickness);  // 画高斯插值的线
+				if(data->opt_least_squares) drawLine(draw_list, origin, data->LeastSquaresResults, IM_COL32(255, 128, 128, 255), thickness);  // 画最小二乘拟合的线
 			}
 		}
 		ImGui::End();
