@@ -7,6 +7,25 @@
 
 using namespace Ubpa;
 
+float Polynomial(std::vector<Ubpa::pointf2>points, int x)
+{
+	//int size = points.size();
+	//float sum = 0;
+	//for (int k = 0; k < size; k++)
+	//{
+	//	float l = 1;
+	//	for (int j = 0; j < size; j++)
+	//	{
+	//		if (j == k) { continue; }
+	//		l *= x - points[j][0] / points[k][0] - points[j][0];
+	//	}
+	//	sum += points[k][1] * l;
+	//}
+
+	//return sum;
+	return points[0][1];
+}
+
 void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 	schedule.RegisterCommand([](Ubpa::UECS::World* w) {
 		auto data = w->entityMngr.GetSingleton<CanvasData>();
@@ -16,7 +35,7 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 		if (ImGui::Begin("Canvas")) {
 			//ImGui::Checkbox("Enable grid", &data->opt_enable_grid);
 			//ImGui::Checkbox("Enable context menu", &data->opt_enable_context_menu);
-			ImGui::Checkbox("Draw Power Function", &data->opt_lagrange);
+			ImGui::Checkbox("Lagrange", &data->opt_lagrange);
 
 			// Using InvisibleButton() as a convenience 1) it will advance the layout cursor and 2) allows us to use IsItemHovered()/IsItemActive()
 			ImVec2 canvas_p0 = ImGui::GetCursorScreenPos();      // ImDrawList API uses screen coordinates!
@@ -38,16 +57,33 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 			const ImVec2 origin(canvas_p0.x + data->scrolling[0], canvas_p0.y + data->scrolling[1]); // canvas的位置
 			const pointf2 mouse_pos_in_canvas(io.MousePos.x - origin.x, io.MousePos.y - origin.y);  // 鼠标点击位置减去canvas位置, 得到相对于canvas的位置
 
-			static int points_size = -1;  // 通过点的数量来判断是否需要重新绘制线条(重新计算参数)
 			// 添加点
 			if (is_hovered && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
 			{
 				data->points.push_back(mouse_pos_in_canvas);
+
+				// 找出要画的线条的起点和终点
+				int minX = INT_MAX;
+				int maxX = INT_MIN;
+				for (int i = 0; i < data->points.size(); i++) 
+				{
+					if (data->points[i][0] < minX){ minX = data->points[i][0]; }
+					if (data->points[i][0] > maxX){ maxX = data->points[i][0]; }
+				}
+
+				// 重新计算所有点的坐标, 并保存到容器中
+				int wrapLength = 10; // 在最小和最大以外多画的点数
+				int step = 1;  // 每step个像素之间画一条线
+				data->LagrangeResults.clear();
+				for (int x = minX - wrapLength; x < maxX + wrapLength; x+=step)
+				{
+					data->LagrangeResults.push_back(ImVec2(x, Polynomial(data->points, x)));
+				}
 			}
 
 			// Draw points 画点
 			for (int n = 0; n < data->points.size(); n++)
-				draw_list->AddCircle(data->points[n] + origin, 2.0f, IM_COL32(0, 255, 255, 200), 0, 3);
+				draw_list->AddCircleFilled(data->points[n] + origin, 3.0f, IM_COL32(0, 255, 255, 200));
 
 			// Pan (we use a zero mouse threshold when there's no context menu)
 			// You may decide to make that threshold dynamic based on whether the mouse is hovering something etc.
@@ -64,17 +100,8 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 				ImGui::OpenPopupContextItem("context");
 			if (ImGui::BeginPopup("context"))
 			{
-				if (ImGui::MenuItem("Remove one", NULL, false, data->points.size() > 0)) 
-				{ 
-					data->points.resize(data->points.size() - 1);
-					if (data->points.size() == 1)  // !!! 设置为-1, 当点数有2时才会重新绘制
-						points_size = -1;
-				}
-				if (ImGui::MenuItem("Remove all", NULL, false, data->points.size() > 0)) 
-				{ 
-					data->points.clear(); 
-					points_size = -1;
-				}
+				if (ImGui::MenuItem("Remove one", NULL, false, data->points.size() > 0)) { data->points.resize(data->points.size() - 1); }
+				if (ImGui::MenuItem("Remove all", NULL, false, data->points.size() > 0)) { data->points.clear(); }
 				ImGui::EndPopup();
 			}
 
@@ -91,21 +118,12 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 			draw_list->PopClipRect();
 
 
-			// 多项式函数: 幂函数的线性组合
 			if (data->points.size() >= 2)  // 少于两个点, 插值无意义
 			{
+				// 画拉格朗日插值的线
 				if (data->opt_lagrange)
 				{
-					if (points_size != data->points.size())
-					{
-						points_size = data->points.size();
-						// need to recaculate the paramater 
-						draw_func_power(draw_list, data->points, origin, true);
-					}
-					else
-					{
-						draw_func_power(draw_list, data->points, origin, false);
-					}
+					draw_list->AddPolyline(data->LagrangeResults.data(), data->LagrangeResults.size(), IM_COL32(64, 128, 255, 255), false, 1.0f);
 				}
 			}
 		}
@@ -113,85 +131,3 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 	});
 }
 
-/*
-draw_list: 用来画线
-v: 用来取点的信息
-origin: 用来确定画布的位置
-needRecalculate: 是否需要重新计算参数a
-*/
-void draw_func_power(ImDrawList* draw_list, std::vector<Ubpa::pointf2> v, ImVec2 origin, bool needRecalculate)
-{
-	static std::vector<float> elastic_a;  // 因为静态的VectorXf要确定size, 但是点可以增加也可以减少, 所以使用std::vector来做中转
-	static int min_x;
-	static int max_x;
-	static ImU32 color = IM_COL32(255, 0, 0, 200);
-	static float thickness = 1.5f;
-	int size = v.size();
-
-	///////////////////// 计算参数a ////////////////////////////
-	Eigen::VectorXf a(size);
-	if (needRecalculate)  // 点的数量发生了变化, 需要重新计算a
-	{
-		Eigen::MatrixXf X(size, size);
-		Eigen::VectorXf y(size);
-		Eigen::VectorXf a(size);  // 参数 X dot a = y
-
-		min_x = v[0][0];  // 获得添加的点中最小的x值, 坐标都是整数, 所以用int
-		max_x = v[0][0];  // 获得添加的点中最大的x值
-		for (int i = 0; i < size; i++)
-		{
-			if (v[i][0] < min_x) min_x = v[i][0];
-			if (v[i][0] > max_x) max_x = v[i][0];
-			// 初始化X
-			for (int j = 0; j < size; j++)
-				X(i, j) = pow(v[i][0], j);  // x_i^j
-			// 初始化y
-			y[i] = v[i][1];
-		}
-
-		a = X.inverse() * y;
-
-		// 先封到vecto中
-		elastic_a.clear();  // 必须要清空一下, 因为覆盖的话, 如果点比之前变少了, 有的会没有覆盖掉
-		for (int i = 0; i < size; i++)
-			elastic_a.push_back(a[i]);
-	}
-	// 如果不需要重新计算的话, 就直接取之前封好的a; 需要重新计算的话, a在上面也已经封到了elastic_a里了
-	for (int i = 0; i < size; i++)
-		a[i] = elastic_a[i];
-
-	///////////////////// 画线条 ////////////////////////////
-	//int density = 200;  // 插值的点数
-	//int interval = 1 > (max_x - min_x) / density ? 1 : (max_x - min_x) / density;  // 插值点之间的间隔, 最小值是1
-	int interval = 3;
-	static int y_tmp = -1;
-	for (int x1 = min_x - 100; x1 < max_x + 100; x1 += interval)  // 前后多画一些, 防止线接近垂直于x轴时没过点
-	{
-		int x2 = x1 + interval;
-		int y1;  // 由于是坐标点都是整型, 所以会有精度损失, 画出来的线条会锯齿
-		int y2;
-
-		// 计算y1
-		if (y_tmp == -1)  // 如果是画曲线的第一个小片段(曲线是由很多小线段拼起来的), y1要重新算
-		{
-			Eigen::VectorXf x_v1(size);
-			for (int i = 0; i < size; i++)
-				x_v1(i) = pow(x1, i);
-			y1 = a.dot(x_v1);
-		}
-		else  // y1可以直接用之前的
-			y1 = y_tmp;  // 可以直接用之前计算好的
-
-		// 计算y2
-		Eigen::VectorXf x_v2(size);
-		for (int i = 0; i < size; i++)
-			x_v2(i) = pow(x2, i);
-		y2 = a.dot(x_v2);
-
-		y_tmp = y2; // 保存计算好的y2值, 这是下一个线段的起点, 用来画下一个线段
-
-		draw_list->AddLine(ImVec2(x1 + origin.x, y1 + origin.y),
-			ImVec2(x2 + origin.x, y2 + origin.y), color, thickness);
-	}
-	y_tmp = -1;  // 要复位一下, 下一波更新的时候线条的起点才正常
-}
