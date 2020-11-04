@@ -24,11 +24,6 @@ float Lagrange(std::vector<Ubpa::pointf2>points, int x)
 	return sum;
 }
 
-/*
-点在函数顶端
-运算结果复用 
-theta可调 ticked
-*/
 float Gauss(std::vector<Ubpa::pointf2>points, int x, float theta)
 {
 	int size = points.size();
