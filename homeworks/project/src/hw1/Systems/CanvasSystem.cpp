@@ -223,5 +223,5 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 			}
 		}
 		ImGui::End();
-	});
+	});  
 }
