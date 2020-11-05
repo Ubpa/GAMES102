@@ -55,7 +55,7 @@ float LeastSquares(std::vector<Ubpa::pointf2>points, int x, int m)
 	// B^{T}Y = B^{T}B\alpha  ->  \alpha = (B^{T}B)^{-1}B^{T}Y
 	Eigen::MatrixXf B(size, m);
 	Eigen::VectorXf Y(size);
-	Eigen::VectorXf alpha(size);
+	Eigen::VectorXf alpha(m);
 	for (int i = 0; i < size; i++)
 	{
 		for (int j = 0; j < m; j++)
@@ -65,16 +65,24 @@ float LeastSquares(std::vector<Ubpa::pointf2>points, int x, int m)
 	alpha = (B.transpose() * B).inverse() * B.transpose() * Y;
 	
 	float ret = 0;
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < m; i++)
 		ret += alpha[i] * pow(x, i);
 
 	return ret;
 }
 
+float RidgeRegression(std::vector<Ubpa::pointf2>points, int x, int m, float lambda)
+{
+	int size = points.size();
+
+
+	return 0;
+}
+
 /*
 offset: 偏移量, 一般是画布的原点位置
 */
-void drawLine(ImDrawList* draw_list, ImVec2 offset, std::vector<ImVec2> results, ImU32 color, float thickness)
+void addLine(ImDrawList* draw_list, ImVec2 offset, std::vector<ImVec2> results, ImU32 color, float thickness)
 {
 	for (int i = 0; i < results.size() - 1; i++)
 		draw_list->AddLine(ImVec2(results[i][0]   + offset.x, results[i][1] + offset.y),
@@ -93,14 +101,23 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 			//ImGui::Checkbox("Enable grid", &data->opt_enable_grid);
 			//ImGui::Checkbox("Enable context menu", &data->opt_enable_context_menu);
 			ImGui::Checkbox("Lagrange", &data->opt_lagrange);
-			ImGui::Checkbox("Gauss", &data->opt_gauss);
-			ImGui::SameLine(200);
-			if (ImGui::SliderFloat("Theta", &data->GaussTheta, 0.0f, 300.0f))
-				needReCalculate = true;
-			ImGui::Checkbox("LeastSquares", &data->opt_least_squares);
-			ImGui::SameLine(200);
-			if (ImGui::SliderInt("m", &data->LeastSquaresM, 1.0f, data->points.size()<=1?10: data->points.size()))
-				needReCalculate = true;
+
+			ImGui::Checkbox("Gauss", &data->opt_gauss);ImGui::SameLine(200); 
+			if (ImGui::SliderFloat("Theta", &data->GaussTheta, 0.0f, 300.0f)) { needReCalculate = true; }
+
+			ImGui::Checkbox("Least Squares", &data->opt_least_squares); ImGui::SameLine(200);
+			if (ImGui::InputInt("least squares m", &data->LeastSquaresM, 1)) { needReCalculate = true; }
+			if (data->LeastSquaresM < 1) { data->LeastSquaresM = 1; } // set the range
+			if (data->LeastSquaresM > data->points.size()) { data->LeastSquaresM = data->points.size(); }
+
+			ImGui::Checkbox("Ridge Regression", &data->opt_ridge_regression); ImGui::SameLine(200);
+			if (ImGui::InputFloat("lamda", &data->RidgeRegressionLambda, 0.01, 1, 3)) { needReCalculate = true; }  ImGui::Indent(192);
+			if (ImGui::InputInt("ridge regression m", &data->RidgeRegressionM, 1)) { needReCalculate = true; }
+			if (data->RidgeRegressionM < 1) { data->RidgeRegressionM = 1; }  // set the range
+			if (data->RidgeRegressionM > data->points.size()) { data->RidgeRegressionM = data->points.size(); }
+			//if (data->RidgeRegressionLambda < 1) data->LeastSquaresM = 1;
+			//if (data->RidgeRegressionLambda > data->points.size()) data->LeastSquaresM = data->points.size();
+			ImGui::Unindent(192);
 
 			// Using InvisibleButton() as a convenience 1) it will advance the layout cursor and 2) allows us to use IsItemHovered()/IsItemActive()
 			ImVec2 canvas_p0 = ImGui::GetCursorScreenPos();      // ImDrawList API uses screen coordinates!
@@ -168,7 +185,7 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 
 			// 计算与绘制
 			// if add new points or remove points, 则需要更新要绘制的点
-			if (needReCalculate)
+			if (needReCalculate && data->points.size() >= 2)
 			{
 				// 找出要画的线条的起点和终点
 				int minX = FLT_MAX;
@@ -184,11 +201,14 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 				int step = 1;  // 每step个像素之间画一条线
 				data->LagrangeResults.clear();
 				data->GaussResults.clear();
+				data->LeastSquaresResults.clear();
+				data->RidgeRegressionResults.clear();
 				for (int x = minX - wrapLength; x < maxX + wrapLength; x += step)
 				{
 					data->LagrangeResults.push_back(ImVec2(x, Lagrange(data->points, x)));
 					data->GaussResults.push_back(ImVec2(x, Gauss(data->points, x, data->GaussTheta)));
 					data->LeastSquaresResults.push_back(ImVec2(x, LeastSquares(data->points, x, data->LeastSquaresM)));
+					data->RidgeRegressionResults.push_back(ImVec2(x, RidgeRegression(data->points, x, data->RidgeRegressionM, data->RidgeRegressionLambda)));
 				}
 				needReCalculate = false;
 			}
@@ -196,9 +216,10 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 			if (data->points.size() >= 2)  // 少于两个点, 画线无意义
 			{
 				static float thickness = 2.0f;
-				if (data->opt_lagrange) drawLine(draw_list, origin, data->LagrangeResults, IM_COL32(64, 128, 255, 255), thickness);  // 画拉格朗日插值的线
-				if (data->opt_gauss) drawLine(draw_list, origin, data->GaussResults, IM_COL32(64, 128, 255, 255), thickness);  // 画高斯插值的线
-				if(data->opt_least_squares) drawLine(draw_list, origin, data->LeastSquaresResults, IM_COL32(255, 128, 128, 255), thickness);  // 画最小二乘拟合的线
+				if (data->opt_lagrange) addLine(draw_list, origin, data->LagrangeResults, IM_COL32(64, 128, 255, 255), thickness);  // 画拉格朗日插值的线
+				if (data->opt_gauss) addLine(draw_list, origin, data->GaussResults, IM_COL32(128, 255, 255, 255), thickness);  // 画高斯插值的线
+				if (data->opt_least_squares) addLine(draw_list, origin, data->LeastSquaresResults, IM_COL32(255, 128, 128, 255), thickness);  // 画最小二乘拟合的线
+				if (data->opt_ridge_regression) addLine(draw_list, origin, data->RidgeRegressionResults, IM_COL32(255, 64, 64, 255), thickness);  // 画最岭回归拟合的线
 			}
 		}
 		ImGui::End();
