@@ -124,3 +124,9 @@
 
 > 所需数据存放在 [CanvasData.h](src/hw4/Components/CanvasData.h) 中，你可以调整它
 
+## 作业 5
+
+根据作业要求，通过修改 [CanvasSystem.cpp](src/hw5/Systems/CanvasSystem.cpp) 完成作业
+
+> 所需数据存放在 [CanvasData.h](src/hw5/Components/CanvasData.h) 中，你可以调整它
+
