@@ -6,10 +6,6 @@
 
 - Windows 10
 
-  > 确保有“**图形工具**”
-  >
-  > 设置->应用和功能->可选功能，查看是否已安装“**图形工具**”，若无则需要手动安装（添加功能->图形工具->安装）
-
 - DirectX 12
 
 - VS 2019 16.7.5+（[下载链接](https://visualstudio.microsoft.com/zh-hans/vs/)）
@@ -24,11 +20,7 @@
 
   > 希望同学尽量用 GitHub desktop 来克隆库，由于项目代码经常更新，用 GitHub desktop 方便拉取更新。更新可能导致冲突问题，详细解决方法请自行查询相关资料。
 
-- JDK（[下载链接](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html)）
-
-  > 有部分自动化工具用到了 java 的运行时，所以需要安装，并不会要求使用 java 编写程序
-
-- CMake 3.18.4（[下载链接](https://cmake.org/download/)，[简单使用方法的视频教程](https://www.bilibili.com/video/BV1Z7411z78n)，[更详细的使用教程](../../softwares/CMake.md)）
+- CMake 3.18.4+（[下载链接](https://cmake.org/download/)，[简单使用方法的视频教程](https://www.bilibili.com/video/BV1Z7411z78n)，[更详细的使用教程](../../softwares/CMake.md)）
 
 - 可选：assimp（[源码链接](https://github.com/assimp/assimp)）
 
@@ -58,7 +50,7 @@
   > configure 过程中会下载许多依赖库，耗时可能较久，由 git clone 速度而定。另外我们会提供编译好的依赖包（即方法二），免去下载/编译的过程，但这样无法查阅源码。
   >
   
-- 打开项目，在解决方案资源栏里找到 GAMES102_HW_hw1，右键菜单中选“设为启动项目”，然后右键菜单中选“生成”。在等待较长时间的编译完成后，即可在菜单栏中点击“本地 Windows调试器”运行hw1空项目。你会看到一个引擎编辑器界面，在 Game 窗口中有 canvas，这将是作业的所需完成部分。
+- 打开项目，在解决方案资源栏里找到 GAMES102_HW_hw1，右键菜单中选“设为启动项目”，然后右键菜单中选“生成”。在等待较长时间的编译完成后，即可在菜单栏中点击“本地 Windows调试器”运行 hw1 空项目。你会看到一个引擎编辑器界面，在 Game 窗口中有 canvas，这将是作业1的所需完成部分。
 
 ### 方法 2
 
@@ -84,14 +76,12 @@
 > >
 > > 该工具存在一定的问题，如
 > >
-> > - 不能有类型声明，如 `class MyClass;` 
-> > - 不能嵌套类定义
 > > - 不支持部分 C++17 语法
-> > - 不支持模板的连续 `>>` 符号，如 `std::vector<std::vector<int>>` 
+> > - 不支持模板的连续 `>>` 符号，如 `std::vector<std::vector<int>>`，可改为 `std::vector<std::vector<int>> >` 
 > >
 > > 你可以通过手写描述的方式避免这些问题。
 >
-> 如果你需要添加文件，你可以在 src 的合理位置放置代码文件，然后重新在 CMake-Gui 里 configure + generate，vs2019 会刷新项目从而包含新文件
+> 如果你需要添加文件，你可以在 src 的合理位置放置代码文件，然后重新在 CMake-GUI 里 configure + generate，vs2019 会刷新项目从而包含新文件
 
 目前该系统中有画线段功能（在canvas左键拖拽即可），你需要修改这部分逻辑，如通过鼠标点击获取点集，计算相应的曲线，对曲线采样并利用 `ImDrawList::AddLine` 来绘制 polyline（更多的绘制方法看 `ImDrawList` 定义）。
 
