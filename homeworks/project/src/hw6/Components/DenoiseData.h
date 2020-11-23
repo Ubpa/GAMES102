@@ -5,9 +5,11 @@
 #include "../HEMeshX.h"
 
 struct DenoiseData {
-	// [[...]] is attribute list
-	// user-defined attribute is useless
-	// but Utopia use this information for Inspector
+	// [[...]] is attribute list.
+	// User-defined attributes are useless for the compiler,
+	// but Utopia use these informations for Inspector.
+	// If you change struct DenoiseData, you should delete 'details/DenoiseData_AutoRefl.inl'
+	// CMake will generate a new one.
 
 	// [[UInspector::range(std::pair{0.f, 10.f})]]
 	[[UInspector::min_value(0.f)]]
