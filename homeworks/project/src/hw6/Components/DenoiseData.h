@@ -9,6 +9,7 @@ struct DenoiseData {
 	// User-defined attributes are useless for the compiler,
 	// but Utopia use these informations for Inspector.
 	// If you change struct DenoiseData, you should delete 'details/DenoiseData_AutoRefl.inl'
+	// or right click 'DenoiseData_AutoRefl.inl.rule' in 'solution explorer' and select 'compile'
 	// CMake will generate a new one.
 
 	// [[UInspector::range(std::pair{0.f, 10.f})]]
