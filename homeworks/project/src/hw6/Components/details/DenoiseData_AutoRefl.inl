@@ -18,11 +18,10 @@ struct Ubpa::USRefl::TypeInfo<DenoiseData> :
             Attr {TSTR(UInspector::min_value), 0.f},
             Attr {TSTR(UInspector::tooltip), "random scale"},
         }},
-        Field {TSTR("mesh"), &Type::mesh, AttrList {
-            Attr {TSTR(UInspector::hide)},
-        }},
+        Field {TSTR("mesh"), &Type::mesh},
         Field {TSTR("heMesh"), &Type::heMesh, AttrList {
-            Attr {TSTR(UMeta::initializer), []()->Ubpa::USTL::shared_object<HEMeshX>{ return { Ubpa::USTL::make_shared_object<HEMeshX>() }; }},
+            Attr {TSTR(UMeta::initializer), []()->std::shared_ptr<HEMeshX>{ return { std::make_shared<HEMeshX>() }; }},
+            Attr {TSTR(UInspector::hide)},
         }},
         Field {TSTR("copy"), &Type::copy, AttrList {
             Attr {TSTR(UInspector::hide)},

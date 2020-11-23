@@ -5,6 +5,11 @@
 #include "../HEMeshX.h"
 
 struct DenoiseData {
+	// [[...]] is attribute list
+	// user-defined attribute is useless
+	// but Utopia use this information for Inspector
+
+	// [[UInspector::range(std::pair{0.f, 10.f})]]
 	[[UInspector::min_value(0.f)]]
 	[[UInspector::tooltip("random scale")]]
 	float randomScale = 1.f;
@@ -12,7 +17,7 @@ struct DenoiseData {
 	std::shared_ptr<Ubpa::Utopia::Mesh> mesh;
 
 	[[UInspector::hide]]
-	std::shared_ptr<HEMeshX> heMesh{ Ubpa::USTL::make_shared_object<HEMeshX>() };
+	std::shared_ptr<HEMeshX> heMesh{ std::make_shared<HEMeshX>() };
 
 	[[UInspector::hide]]
 	Ubpa::Utopia::Mesh copy;

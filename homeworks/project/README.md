@@ -31,7 +31,6 @@
   - 将独显设为默认显卡
   - 把 [Irradiance.hlsl](assets/shaders/Irradiance.hlsl) 第 99 行的 `1024u` 改小试试，如 `256u`，甚至 `1u`，`0u`
   - 把 [PreFilter.hlsl](assets/shaders/PreFilter.hlsl) 第 108 行的 `256u` 改小试试，如 `64u`，甚至 `1u`，`0u` 
-  - 另外，还可能是没有“图形工具”的原因，参考[教程](https://jingyan.baidu.com/article/4f7d57128c81415b201927b6.html)，如果安装不上，（采用构建方法一的情况下，方法二的话不支持，还是只能将其安装上）可以将 `build/_deps/utopia-src/src/App/DX12App/DX12App.cpp` 的第 263 - 270 行注释掉
 - 框架还处于快速开发中，鲁棒性有限，不良操作可能直接导致程序崩溃，有疑惑可联系助教
 
 ## 构建方法
@@ -59,7 +58,7 @@
 > 所需下载的资源在课程群文件内的“框架依赖资源”里可以找到
 
 - 使用 Github Desktop 克隆此库 [GAMES 102](https://github.com/Ubpa/GAMES102)，注意路径应放到**较浅**的位置，如盘符根目录
-- 直接下载编译好的依赖库 Ubpa_v0.zip（[百度盘链接（提取码：x0i9）](https://pan.baidu.com/s/1KKloWnlDjnIZWN-K9Pfzyw)），将其中的文件夹 Ubpa 放到合适的位置，然后将其内的文件夹 bin 路径加到环境变量 Path 中
+- 下载编译好的依赖库 [Ubpa_v2.zip](https://pan.baidu.com/s/1byH_y3rXcrrs-H7UN9mueA)（百度网盘提取码：qmp4）放到合适的位置，然后将其内的文件夹 bin 的路径加到环境变量 Path 中（参考[教程](https://www.cnblogs.com/-mrl/p/11246666.html)）
 - 使用 CMake-Gui 构建 vs 2019 项目（此时会非常顺利，最终构建的项目内**仅含作业项目**，日后有需要在进行源码构建）
   - 注意 where is the source code 是<project 路径>，下边的路径是 <project 路径>/build
   - 首次点击 configure 默认就是 vs2019 和 x64，这两者都是必要的

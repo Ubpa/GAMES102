@@ -5,17 +5,27 @@
 #include <USRefl/USRefl.h>
 
 template<>
-struct Ubpa::USRefl::TypeInfo<CanvasData>
-    : Ubpa::USRefl::TypeInfoBase<CanvasData>
+struct Ubpa::USRefl::TypeInfo<CanvasData> :
+    TypeInfoBase<CanvasData>
 {
+#ifdef UBPA_USREFL_NOT_USE_NAMEOF
+    static constexpr char name[11] = "CanvasData";
+#endif
     static constexpr AttrList attrs = {};
-
     static constexpr FieldList fields = {
-        Field{"points", &CanvasData::points},
-        Field{"scrolling", &CanvasData::scrolling},
-        Field{"opt_enable_grid", &CanvasData::opt_enable_grid},
-        Field{"opt_enable_context_menu", &CanvasData::opt_enable_context_menu},
-        Field{"adding_line", &CanvasData::adding_line},
+        Field {TSTR("points"), &Type::points},
+        Field {TSTR("scrolling"), &Type::scrolling, AttrList {
+            Attr {TSTR(UMeta::initializer), []()->Ubpa::valf2{ return { 0.f,0.f }; }},
+        }},
+        Field {TSTR("opt_enable_grid"), &Type::opt_enable_grid, AttrList {
+            Attr {TSTR(UMeta::initializer), []()->bool{ return { true }; }},
+        }},
+        Field {TSTR("opt_enable_context_menu"), &Type::opt_enable_context_menu, AttrList {
+            Attr {TSTR(UMeta::initializer), []()->bool{ return { true }; }},
+        }},
+        Field {TSTR("adding_line"), &Type::adding_line, AttrList {
+            Attr {TSTR(UMeta::initializer), []()->bool{ return { false }; }},
+        }},
     };
 };
 
