@@ -59,6 +59,24 @@ void DenoiseSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 				}();
 			}
 
+			if (ImGui::Button("Set Normal to Color")) {
+				[&]() {
+					if (!data->mesh) {
+						spdlog::warn("mesh is nullptr");
+						return;
+					}
+
+					data->mesh->SetToEditable();
+					const auto& normals = data->mesh->GetNormals();
+					std::vector<rgbf> colors;
+					for (const auto& n : normals)
+						colors.push_back((n.as<valf3>() + valf3{ 1.f }) / 2.f);
+					data->mesh->SetColors(std::move(colors));
+
+					spdlog::info("Set Normal to Color Success");
+				}();
+			}
+
 			if (ImGui::Button("HEMesh to Mesh")) {
 				[&]() {
 					if (!data->mesh) {
@@ -66,8 +84,8 @@ void DenoiseSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 						return;
 					}
 
-					if (!data->heMesh->IsTriMesh()) {
-						spdlog::warn("HEMesh isn't triangle mesh");
+					if (!data->heMesh->IsTriMesh() || data->heMesh->IsEmpty()) {
+						spdlog::warn("HEMesh isn't triangle mesh or is empty");
 						return;
 					}
 
@@ -100,6 +118,10 @@ void DenoiseSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 				[&]() {
 					if (!data->mesh) {
 						spdlog::warn("mesh is nullptr");
+						return;
+					}
+					if (data->copy.GetPositions().empty()) {
+						spdlog::warn("copied mesh is empty");
 						return;
 					}
 

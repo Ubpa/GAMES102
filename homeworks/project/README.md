@@ -119,3 +119,8 @@
 
 > 所需数据存放在 [CanvasData.h](src/hw5/Components/CanvasData.h) 中，你可以调整它
 
+## 作业 6
+
+根据作业要求，通过修改 [DenoiseSystem.cpp](src/hw6/Systems/DenoiseSystem.cpp) 完成作业
+
+> 所需数据存放在 [DenoiseData.h](src/hw6/Components/DenoiseData.h) 中，你可以调整它
