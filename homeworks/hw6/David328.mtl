@@ -1,0 +1,12 @@
+# 
+# Wavefront material file
+# Converted by 3D Exploration 1.7
+# XDimension Software, LLC
+# http://www.xdsoft.com/explorer/
+# 
+newmtl Material__1
+	 Ka 0.2 0.2 0.2
+	 Kd 0 0 0
+	 Ks 0.2 0.2 0.2
+	 illum 2
+	 Ns 25.6
