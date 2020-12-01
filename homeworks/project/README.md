@@ -125,9 +125,11 @@
 
 > 所需数据存放在 [DenoiseData.h](src/hw6/Components/DenoiseData.h) 中，你可以调整它
 
+本次主要用到了 [UHEMesh 库](https://github.com/Ubpa/UHEMesh)，课程视频中有其简单介绍，详细请查看源码中各类型（TVertex, TEdge, TPolygon, THalfEdge, HEMesh）接口
+
 ### 网格
 
-点击下边的下载连接，把它们放到 [assets/models/](assets/models/) 下，重启框架即可找到新的 obj 
+点击下边的下载链接，把它们放到 [assets/models/](assets/models/) 下，重启框架即可找到新的 obj 
 
 - [Balls.obj](https://cdn.jsdelivr.net/gh/Ubpa/USTC_CG_Data@master/Homeworks/04_MinSurfMeshPara/mesh/Balls.obj) 
 - [Bunny_head.obj](https://cdn.jsdelivr.net/gh/Ubpa/USTC_CG_Data@master/Homeworks/04_MinSurfMeshPara/mesh/Bunny_head.obj) 
