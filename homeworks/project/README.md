@@ -136,3 +136,12 @@
 - [Cat_head.obj](https://cdn.jsdelivr.net/gh/Ubpa/USTC_CG_Data@master/Homeworks/04_MinSurfMeshPara/mesh/Cat_head.obj) 
 - [David328.obj](https://cdn.jsdelivr.net/gh/Ubpa/USTC_CG_Data@master/Homeworks/04_MinSurfMeshPara/mesh/David328.obj) 
 - [Nefertiti_face.obj](https://cdn.jsdelivr.net/gh/Ubpa/USTC_CG_Data@master/Homeworks/04_MinSurfMeshPara/mesh/Nefertiti_face.obj) 
+
+## 作业 7
+
+根据作业要求，通过修改 [DenoiseSystem.cpp](src/hw6/Systems/DenoiseSystem.cpp) 完成作业
+
+> 所需数据存放在 [DenoiseData.h](src/hw6/Components/DenoiseData.h) 中，你可以调整它
+
+框架涉及内容同于[作业 6](#作业 6)
+
