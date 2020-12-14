@@ -6,7 +6,7 @@
 
 ## 目的
 
-学习 Voronoi 算法、使用相关数学库（如 Triangle、CGAL 等）
+学习 Voronoi 算法、使用相关数学库（如 [Triangle](http://www.cs.cmu.edu/~quake/triangle.html)、[CGAL](https://www.cgal.org/) 等）
 
 ## 步骤
 
