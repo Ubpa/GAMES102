@@ -103,10 +103,13 @@ void DenoiseSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 						indices[3 * i + 1] = static_cast<uint32_t>(tri[1]);
 						indices[3 * i + 2] = static_cast<uint32_t>(tri[2]);
 					}
+					data->mesh->SetColors({});
+					data->mesh->SetUV({});
 					data->mesh->SetPositions(std::move(positions));
 					data->mesh->SetIndices(std::move(indices));
 					data->mesh->SetSubMeshCount(1);
 					data->mesh->SetSubMesh(0, { 0, M * 3 });
+					data->mesh->GenUV();
 					data->mesh->GenNormals();
 					data->mesh->GenTangents();
 
