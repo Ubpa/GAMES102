@@ -5,6 +5,7 @@ lib/
 _deps/
 bin/logs/
 assets/
+students/
 
 *Config.h
 
