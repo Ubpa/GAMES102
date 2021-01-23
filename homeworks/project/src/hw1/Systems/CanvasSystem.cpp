@@ -4,6 +4,8 @@
 
 #include <_deps/imgui/imgui.h>
 
+#include <fstream>
+
 #include <Dense>
 
 using namespace Ubpa;
@@ -11,12 +13,13 @@ using namespace Ubpa;
 
 void polygon_interpolation(std::vector<Ubpa::pointf2>& input_points, std::vector<float>& panel_x, std::vector<float>& output_y) {
 	//Using power base
-	Eigen::MatrixXf Van(input_points.size(),input_points.size());
+	if (input_points.size() < 2) return;
+	Eigen::MatrixXf Van(input_points.size(), input_points.size());
 	Eigen::VectorXf as(input_points.size());
 	Eigen::VectorXf y(input_points.size());
 	for (size_t i = 0; i < input_points.size(); ++i) {
 		for (size_t j = 0; j < input_points.size(); ++j) {
-			Van(i,j)=std::pow(input_points[i][0],j);
+			Van(i, j) = std::pow(input_points[i][0], j);
 		}
 		y(i) = input_points[i][1];
 	}
@@ -42,36 +45,84 @@ void Lagrange_interpolation(std::vector<Ubpa::pointf2>& input_points, std::vecto
 				L *= (x - input_points[j][0]);
 				L /= (input_points[i][0] - input_points[j][0]);
 			}
-			y +=  L;
+			y += L;
 		}
 		output_y.push_back(y);
 	}
 
 }
 
-void Guass_interpolation(std::vector<Ubpa::pointf2>& input_points, std::vector<float>& panel_x, std::vector<float>& output_y,float lambda,float b0) {
+void Guass_interpolation(std::vector<Ubpa::pointf2>& input_points, std::vector<float>& panel_x, std::vector<float>& output_y, float sigma, float b0) {
 	//Using Guass
+	if (input_points.size() < 2) return;
 	Eigen::MatrixXf G(input_points.size(), input_points.size());
 	Eigen::VectorXf bs(input_points.size());
 	Eigen::VectorXf y(input_points.size());
 	for (size_t i = 0; i < input_points.size(); ++i) {
 		for (size_t j = 0; j < input_points.size(); ++j) {
-			G(i, j) =std::exp(-0.5 * std::powf((input_points[i][0] - input_points[j][0]), 2) / lambda);
+			G(i, j) = std::exp(-0.5 * std::powf((input_points[i][0] - input_points[j][0]), 2) / sigma);
 		}
-		y(i) = input_points[i][1]-b0;
+		y(i) = input_points[i][1] - b0;
 	}
 	bs = G.householderQr().solve(y);
 
 	for (auto x : panel_x) {
 		float y = b0;
 		for (size_t i = 0; i < input_points.size(); ++i) {
-			y += bs(i)*std::exp(-0.5 * std::powf((x - input_points[j][0]), 2) / lambda);
+			y += bs(i) * std::exp(-0.5 * std::powf((x - input_points[i][0]), 2) / sigma);
 		}
 		output_y.push_back(y);
 	}
 }
 
+void LSM_approximation(std::vector<Ubpa::pointf2>& input_points, std::vector<float>& panel_x, std::vector<float>& output_y, int m,float b0,float sigma) {
+	//Using LSM
+	if (input_points.size() < 3) return;
+	if (m + 1 > input_points.size()) m = input_points.size() - 1;
+	Eigen::MatrixXf A(input_points.size(), m + 1);
+	Eigen::VectorXf as(m + 1);
+	Eigen::VectorXf y(input_points.size());
+	for (int i = 0; i < input_points.size(); ++i) {
+		for (int j = 0; j < m + 1; ++j) {
+			A(i, j) = std::exp(-0.5 * std::powf((input_points[i][0] - input_points[j][0]), 2) / sigma);
+		}
+		y(i) = input_points[i][1]-b0;
+	}
+	as = (A.transpose() * A).inverse() * A.transpose() * y;
+	
+	for (auto x : panel_x) {
+		float y = b0;
+		for (size_t i = 0; i < m+1; ++i) {
+			y += as(i) * std::exp(-0.5 * std::powf((x - input_points[i][0]), 2) / sigma);
+		}
+		output_y.push_back(y);
+	}
+	
+}
 
+void RR_approximation(std::vector<Ubpa::pointf2>& input_points, std::vector<float>& panel_x, std::vector<float>& output_y, float lambda, int m, float b0, float sigma) {
+	//Using LSM
+	if (input_points.size() < 3) return;
+	if (m + 1 > input_points.size()) m = input_points.size() - 1;
+	Eigen::MatrixXf A(input_points.size(), m + 1);
+	Eigen::VectorXf as(m + 1);
+	Eigen::VectorXf y(input_points.size());
+	for (int i = 0; i < input_points.size(); ++i) {
+		for (int j = 0; j < m + 1; ++j) {
+			A(i, j) = std::exp(-0.5 * std::powf((input_points[i][0] - input_points[j][0]), 2) / sigma);
+		}
+		y(i) = input_points[i][1]-b0;
+	}
+	as = (A.transpose() * A + lambda * Eigen::MatrixXf::Identity(m + 1, m + 1)).inverse() * A.transpose() * y;
+
+	for (auto x : panel_x) {
+		float y = b0;
+		for (size_t i = 0; i < m + 1; ++i) {
+			y += as(i) * std::exp(-0.5 * std::powf((x - input_points[i][0]), 2) / sigma);
+		}
+		output_y.push_back(y);
+	}
+}
 
 void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 	schedule.RegisterCommand([](Ubpa::UECS::World* w) {
@@ -88,8 +139,10 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 			ImGui::Checkbox("Guass_interpolation", &data->opt_proc[1]);
 			ImGui::Checkbox("RR_approximation", &data->opt_proc[2]); //Ridge Regression
 			ImGui::Checkbox("LSM_approximation", &data->opt_proc[3]); //Least Squares Method
-			ImGui::SliderFloat("Lamda", &data->lambda, -100.0f, 100.0f);
-			ImGui::SliderFloat("b0", &data->b0, -100.0f, 100.0f);
+			ImGui::SliderFloat("Lamda", &data->lambda, -1000.0f, 1000.0f);
+			ImGui::SliderFloat("sigma", &data->sigma, 0.0f, 1000.0f);
+			ImGui::SliderFloat("b0", &data->b0, 0.0f, 500.0f);
+			ImGui::SliderInt("Highest Power", &data->m, 1, 100);
 			// Typically you would use a BeginChild()/EndChild() pair to benefit from a clipping
 			// region + own scrolling. Here we demonstrate that this can be replaced by simple
 			// offsetting + custom drawing + PushClipRect/PopClipRect() calls. To use a child window
@@ -139,7 +192,22 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 				data->points.push_back(mouse_pos_in_canvas);
 				data->generate_line = true;
 			}
-
+			if ((data->opt_proc[3] || data->opt_proc[2] )&&data->cur_m != data->m) {
+				data->cur_m = data->m;
+				data->generate_line = true;
+			}
+			if ((data->opt_proc[3] || data->opt_proc[2] || data->opt_proc[1]) && data->cur_b0 != data->b0) {
+				data->cur_b0 = data->b0;
+				data->generate_line = true;
+			}
+			if ((data->opt_proc[3]) && data->cur_lambda != data->lambda) {
+				data->cur_lambda = data->lambda;
+				data->generate_line = true;
+			}
+			if ((data->opt_proc[3] || data->opt_proc[2]|| data->opt_proc[1]) && data->cur_sigma != data->sigma) {
+				data->cur_sigma = data->cur_sigma;
+				data->generate_line = true;
+			}
 			// Pan (we use a zero mouse threshold when there's no context menu) You may decide to
 			// make that threshold dynamic based on whether the mouse is hovering something etc.
 
@@ -182,7 +250,7 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 
 			if (data->generate_line) {
 				data->panel_x.clear();
-				
+
 				for (float px = canvas_p0.x - origin.x; px < canvas_p1.x - origin.x; px += step) {
 					data->panel_x.push_back(px);
 				}
@@ -192,37 +260,50 @@ void CanvasSystem::OnUpdate(Ubpa::UECS::Schedule& schedule) {
 
 				}
 				if (data->opt_proc[1]) {
-					data->panel_y[0].clear();
-					Guass_interpolation(data->points, data->panel_x, data->panel_y[0],data->lambda,data->b0);
+					data->panel_y[1].clear();
+					Guass_interpolation(data->points, data->panel_x, data->panel_y[1], data->sigma, data->b0);
 				}
 				if (data->opt_proc[2]) {
-
+					data->panel_y[2].clear();
+					LSM_approximation(data->points, data->panel_x, data->panel_y[2], data->m,data->b0,data->sigma);
 				}
 				if (data->opt_proc[3]) {
-
+					data->panel_y[3].clear();
+					RR_approximation(data->points, data->panel_x, data->panel_y[3], data->lambda, data->m, data->b0, data->sigma);
 				}
 				data->generate_line = false;
 
 			}
 
-			if (data->opt_proc[0]&&data->points.size() > 1) {
-				for (size_t i = 0; i < data->panel_x.size()-1; ++i) {
-					draw_list->AddLine(ImVec2(origin.x + data->panel_x[i], origin.y + data->panel_y[0][i]), ImVec2(origin.x + data->panel_x[i+1], origin.y + data->panel_y[0][i+1]), IM_COL32(255, 255, 0, 255));
+			if (data->opt_proc[0] && data->points.size() > 1) {
+				for (size_t i = 0; i < data->panel_x.size() - 1; ++i) {
+					draw_list->AddLine(ImVec2(origin.x + data->panel_x[i], origin.y + data->panel_y[0][i]), ImVec2(origin.x + data->panel_x[i + 1], origin.y + data->panel_y[0][i + 1]), IM_COL32(255, 255, 0, 255));
 				}
 
 			}
 			if (data->opt_proc[1] && data->points.size() > 1) {
 				for (size_t i = 0; i < data->panel_x.size() - 1; ++i) {
-					draw_list->AddLine(ImVec2(origin.x + data->panel_x[i], origin.y + data->panel_y[0][i]), ImVec2(origin.x + data->panel_x[i + 1], origin.y + data->panel_y[0][i + 1]), IM_COL32(0, 255, 0, 255));
+					draw_list->AddLine(ImVec2(origin.x + data->panel_x[i], origin.y + data->panel_y[1][i]), ImVec2(origin.x + data->panel_x[i + 1], origin.y + data->panel_y[1][i + 1]), IM_COL32(0, 255, 0, 255));
 				}
 
 			}
-			
+			if (data->opt_proc[2] && data->points.size() > 2) {
+				for (size_t i = 0; i < data->panel_x.size() - 1; ++i) {
+					draw_list->AddLine(ImVec2(origin.x + data->panel_x[i], origin.y + data->panel_y[2][i]), ImVec2(origin.x + data->panel_x[i + 1], origin.y + data->panel_y[2][i + 1]), IM_COL32(0, 0, 255, 255));
+				}
+
+			}
+			if (data->opt_proc[3] && data->points.size() > 2) {
+				for (size_t i = 0; i < data->panel_x.size() - 1; ++i) {
+					draw_list->AddLine(ImVec2(origin.x + data->panel_x[i], origin.y + data->panel_y[3][i]), ImVec2(origin.x + data->panel_x[i + 1], origin.y + data->panel_y[3][i + 1]), IM_COL32(0, 255, 255, 255));
+				}
+
+			}
 			/*for (int n = 0; n < data->points.size(); n += 2)
 				draw_list->AddLine(ImVec2(origin.x + data->points[n][0], origin.y + data->points[n][1]), ImVec2(origin.x + data->points[n + 1][0], origin.y + data->points[n + 1][1]), IM_COL32(255, 255, 0, 255), 2.0f);*/
 			draw_list->PopClipRect();
 		}
-		
+
 		ImGui::End();
 		});
 }

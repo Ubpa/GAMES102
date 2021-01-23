@@ -13,8 +13,17 @@ struct CanvasData {
 
 	float lambda=1.0f;
 	float b0 = 0.0f;
+	int m = 2; //函数的最高次数
+	float sigma = 1.0f;
+
+	float cur_lambda = 1.0f;
+	float cur_b0 = 0.0f;
+	int cur_m = 2; //函数的最高次数
+	float cur_sigma = 1.0f;
+
 	std::vector<float> panel_x;
 	std::vector<float> panel_y[4];
+	
 	
 };
 
